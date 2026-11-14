@@ -300,7 +300,9 @@ body.is-curtain { overflow: hidden; }
 }
 .when__art img {
   width: 100%;
-  mix-blend-mode: multiply;
+  height: auto;
+  aspect-ratio: 993 / 692;
+  background: var(--ivory);      /* 이미지 바탕을 아이보리로 미리 입혀 둠 — 로드·등장 중 흰 바탕이 비치지 않게 */
 }
 .when__date {
   font-family: var(--f-en);
