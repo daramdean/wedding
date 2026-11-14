@@ -578,8 +578,8 @@ document.addEventListener('click', async e => {
   let wanted = true;
   try { wanted = localStorage.getItem('bgm') !== 'off'; } catch (_) {}
 
-  audio.addEventListener('error', () => { btn.hidden = true; });   // 음악 파일이 없으면 버튼도 숨김
-  audio.addEventListener('canplay', () => { btn.hidden = false; }, { once: true });
+  btn.hidden = false;                                              // iOS는 미리 불러오지 않아 canplay 를 기다리면 버튼이 안 보임
+  audio.addEventListener('error', () => { btn.hidden = true; });   // 음악 파일이 없으면 버튼만 숨김
 
   function setupGain() {                      // iOS는 audio.volume 이 무시돼서 Web Audio 로 음량 조절
     if (ctx) return;
@@ -601,7 +601,8 @@ document.addEventListener('click', async e => {
       await audio.play();
       fade(VOLUME, 2500);
       on = true; btn.setAttribute('aria-pressed', 'true'); btn.setAttribute('aria-label', '배경음악 끄기');
-    } catch (_) { /* 자동 재생이 막히면 다음 터치 때 다시 시도 */ }
+      return true;
+    } catch (_) { return false; /* 자동 재생이 막히면 다음 터치 때 다시 시도 */ }
   }
   function stop() {
     fade(0, 400); setTimeout(() => audio.pause(), 450);
@@ -614,12 +615,15 @@ document.addEventListener('click', async e => {
     wanted ? play() : stop();
   });
   // 브라우저 정책상 소리는 사용자의 첫 동작 뒤에만 재생 가능
-  const first = () => {
-    if (started) return; started = true;
-    ['pointerdown', 'touchend', 'keydown'].forEach(t => document.removeEventListener(t, first, true));
-    if (wanted) play();
+  const EVENTS = ['pointerup', 'touchend', 'click', 'keydown'];   // 모바일 사파리는 손을 뗄 때(touchend)만 재생을 허용
+  const done = () => EVENTS.forEach(t => document.removeEventListener(t, first, true));
+  const first = async e => {
+    if (e && btn.contains(e.target)) return;                    // 음악 버튼은 자기 처리기에서 담당
+    if (started) return done();
+    if (!wanted) { started = true; return done(); }
+    if (await play()) { started = true; done(); }               // 실패하면 다음 터치 때 다시 시도
   };
-  ['pointerdown', 'touchend', 'keydown'].forEach(t => document.addEventListener(t, first, true));
+  EVENTS.forEach(t => document.addEventListener(t, first, true));
   // 화면을 벗어나면 잠시 멈춤
   document.addEventListener('visibilitychange', () => {
     if (!on) return;
