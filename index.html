@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>박종민 ♥ 장혜린 결혼합니다</title>
+<meta name="description" content="2027년 1월 9일 토요일 오전 11시 · 콘래드 서울 5층 파크볼룸">
+<!-- 공유 미리보기 (카카오톡·문자 등). 배포 후 https://daramdean.github.io/wedding 을 실제 주소로 바꿔주세요 -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="박종민 ♥ 장혜린 결혼합니다">
+<meta property="og:title" content="박종민 ♥ 장혜린 결혼합니다">
+<meta property="og:description" content="2027년 1월 9일 토요일 오전 11시 · 콘래드 서울 5층 파크볼룸">
+<meta property="og:url" content="https://daramdean.github.io/wedding/">
+<meta property="og:image" content="https://daramdean.github.io/wedding/assets/og/og-kakao.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="박종민과 장혜린의 웨딩 사진">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FAF6ED">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Nanum+Myeongjo:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/img/curtain-closed-l.webp">
+<link rel="preload" as="image" href="assets/img/curtain-closed-r.webp">
+<link rel="stylesheet" href="css/style.css">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<canvas id="snow" aria-hidden="true"></canvas>
+<audio id="bgm" src="assets/audio/bgm.mp3" preload="auto" loop playsinline></audio>
+<button type="button" class="bgm" id="bgm-btn" aria-label="배경음악 켜기" aria-pressed="false" hidden>
+  <span class="bgm__bars" aria-hidden="true"><i></i><i></i><i></i></span>
+</button>
+
+<main class="invitation">
+
+  <!-- 01 INTRO -->
+  <section class="intro" id="intro" aria-label="인트로">
+    <div class="intro__frame" aria-hidden="true">
+      <img class="intro__layer" src="assets/img/intro-base.webp" alt="">
+      <img class="intro__layer intro__flower intro__flower--l" src="assets/img/intro-flower-l.webp" alt="">
+      <img class="intro__layer intro__flower intro__flower--r" src="assets/img/intro-flower-r.webp" alt="">
+    </div>
+    <div class="intro__content">
+      <h1 class="intro__names">
+        <span class="intro__name intro__name--groom">Jongmin</span>
+        <span class="intro__amp">&amp;</span>
+        <span class="intro__name intro__name--bride">Hyerin</span>
+      </h1>
+      <p class="intro__fullnames">박종민 <i>·</i> 장혜린</p>
+      <span class="intro__rule" aria-hidden="true"></span>
+      <p class="intro__message">We joyfully invite you<br>to celebrate our wedding</p>
+      <button type="button" class="intro__rsvp" id="rsvp-open">참석여부 전달하기</button>
+    </div>
+    <div class="intro__scroll" aria-hidden="true"><span></span></div>
+
+    <!-- 커튼: 닫힘 → 열림 → 양끝으로 사라짐 -->
+    <div class="curtain" id="curtain" aria-hidden="true">
+      <img class="curtain__img curtain__closed curtain--l" src="assets/img/curtain-closed-l.webp" alt="">
+      <img class="curtain__img curtain__closed curtain--r" src="assets/img/curtain-closed-r.webp" alt="">
+      <img class="curtain__img curtain__open curtain--l" src="assets/img/curtain-open-l.webp" alt="">
+      <img class="curtain__img curtain__open curtain--r" src="assets/img/curtain-open-r.webp" alt="">
+    </div>
+  </section>
+
+  <!-- 02 WHEN & WHERE -->
+  <section class="section when" id="when" aria-labelledby="when-title">
+    <header class="sec-head reveal">
+      <h2 class="t-title" id="when-title">When &amp; Where</h2>
+      <p class="t-sub">예식 일시 및 장소</p>
+    </header>
+
+    <figure class="when__art reveal">
+      <img src="assets/img/venue-hotel.webp" alt="콘래드 서울 입구 수채화 일러스트">
+    </figure>
+
+    <div class="when__info reveal">
+      <p class="when__date">2027. 01. 09</p>
+      <p class="t-label when__day">Saturday &middot; 11:00 AM</p>
+      <p class="t-body when__kr">2027년 1월 9일 토요일 오전 11시</p>
+      <span class="divider" aria-hidden="true"></span>
+      <p class="when__venue">콘래드 서울 <span class="when__hall">5층 파크볼룸</span></p>
+      <p class="t-cap">서울 영등포구 국제금융로 10</p>
+    </div>
+
+  </section>
+
+  <!-- 03 PHOTO BOOTH (중간 환기) -->
+  <section class="section booth" id="booth" aria-labelledby="booth-title">
+    <header class="sec-head reveal">
+      <h2 class="t-title" id="booth-title">Our Little Moments</h2>
+    </header>
+
+    <div class="booth__machine reveal" id="booth-machine" role="img" aria-label="포토부스에서 네컷 사진이 내려오는 모습">
+      <img class="booth__back" src="assets/img/booth-back.webp" alt="">
+      <div class="booth__window">
+        <p class="booth__engrave" aria-hidden="true">Save<br>the<br>Date</p>
+        <div class="booth__strip">
+          <img src="assets/img/booth-1.webp" alt="">
+          <img src="assets/img/booth-2.webp" alt="">
+          <img src="assets/img/booth-3.webp" alt="">
+          <img src="assets/img/booth-4.webp" alt="">
+        </div>
+      </div>
+      <img class="booth__frame" src="assets/img/booth-frame.webp" alt="">
+    </div>
+    <p class="t-cap booth__hint reveal">사진을 누르면 다시 볼 수 있어요</p>
+  </section>
+
+  <!-- 04 INVITATION -->
+  <section class="invite" id="invite" aria-label="초대의 말">
+    <div class="invite__card">
+      <div class="invite__content">
+        <p class="t-body invite__msg reveal">포근한 겨울,<br>종민과 혜린의 결혼식에 초대합니다.</p>
+        <p class="t-body invite__msg invite__msg--2 reveal">저희가 가장 아끼고 사랑하는 분들과 첫 시작을 함께하려 하니, 참석해&nbsp;주신다면 감사와 기쁨으로 간직하겠습니다.</p>
+        <span class="divider reveal" aria-hidden="true"></span>
+        <dl class="invite__parents reveal">
+          <div><dt>박용복 <i>·</i> 임명분</dt><dd><span>의 장남</span> <b>종민</b></dd></div>
+          <div><dt>장용훈 <i>·</i> 이희경</dt><dd><span>의 장녀</span> <b>혜린</b></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 BRIDE & GROOM -->
+  <section class="section couple" id="couple" aria-label="신랑 신부 소개">
+    <img class="couple__top reveal" src="assets/img/deco-top.webp" alt="" aria-hidden="true">
+
+    <div class="couple__row couple__row--bride">
+      <figure class="person person--bride pop">
+        <span class="person__name">Hyerin <svg class="doodle" viewBox="0 0 24 22" aria-hidden="true"><path d="M12 20s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 9c0 5.8-8 11-8 11z"/></svg></span>
+        <div class="person__sticker person__sticker--placeholder" data-src="assets/img/sticker-bride.webp">신부 스티커</div>
+      </figure>
+      <ul class="tape tape--bride pop" aria-label="신부 장혜린 소개">
+        <li>꽃, 와인, 여행, 뮤지컬 좋아 ♡</li>
+        <li>뭐든 다 잘 할 수 있다고<br>생각하는 씩씩한 기획자</li>
+        <li>ESFJ 사람 좋아하는<br>사랑둥이 댕댕이</li>
+      </ul>
+    </div>
+
+    <div class="couple__row couple__row--groom">
+      <img class="couple__bouquet pop" src="assets/img/deco-bouquet.webp" alt="" aria-hidden="true">
+      <ul class="tape tape--groom pop" aria-label="신랑 박종민 소개">
+        <li>치킨, 여행, 새 물건, 박물관 좋아 ♡</li>
+        <li>철저한 분석, 예민한 감각의<br>스마트한 개발자</li>
+        <li>INTJ 내 사람을<br>깊게 아끼는 츤데레</li>
+      </ul>
+      <figure class="person person--groom pop">
+        <span class="person__name">Jongmin <svg class="doodle" viewBox="0 0 24 22" aria-hidden="true"><path d="M12 20s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 9c0 5.8-8 11-8 11z"/></svg></span>
+        <div class="person__sticker person__sticker--placeholder" data-src="assets/img/sticker-groom.webp">신랑 스티커</div>
+      </figure>
+    </div>
+
+    <div class="couple__deco" aria-hidden="true">
+      <img class="deco deco--candle" src="assets/img/deco-candle.webp" alt="">
+      <img class="deco deco--glasses" src="assets/img/deco-glasses.webp" alt="">
+      <img class="deco deco--finger" src="assets/img/deco-finger.webp" alt="">
+      <img class="deco deco--tray" src="assets/img/deco-tray.webp" alt="">
+    </div>
+  </section>
+
+  <!-- 06 GALLERY -->
+  <section class="section gallery" id="gallery" aria-labelledby="gallery-title">
+    <div class="gallery__panel">
+      <header class="sec-head reveal">
+        <h2 class="t-title" id="gallery-title">Gallery</h2>
+        <p class="t-sub gallery__sub">웨딩사진 작가인 신부 동생이 직접 촬영한<br>사진들이 포함돼 있어요!</p>
+      </header>
+      <ul class="gallery__grid reveal" id="gallery-grid"></ul>
+      <button type="button" class="btn-more reveal" id="gallery-more">사진 더보기</button>
+    </div>
+  </section>
+
+  <!-- 중간 환기 — 웨딩 파티 일러스트 -->
+  <figure class="interlude reveal" aria-hidden="true">
+    <img src="assets/img/party.webp" alt="">
+  </figure>
+
+  <!-- 07 ORDER (식순) — 진주알이 S자 길을 따라 스크롤과 함께 내려감 -->
+  <section class="section order" id="order" aria-label="식순">
+    <div class="order__track" id="order-track">
+      <svg class="order__path" id="order-svg" aria-hidden="true">
+        <path class="order__line" id="order-line"/>
+        <path class="order__done" id="order-done"/>
+      </svg>
+      <ol class="order__list">
+        <li class="order__item" data-side="L">
+          <img class="order__icon" src="assets/img/order-ceremony.webp" alt="">
+          <div class="order__text"><p class="order__name">Ceremony</p><p class="t-sub order__kr">예식</p></div>
+        </li>
+        <li class="order__item" data-side="R">
+          <img class="order__icon" src="assets/img/order-photo.webp" alt="">
+          <div class="order__text"><p class="order__name">Photo</p><p class="t-sub order__kr">기념 촬영</p></div>
+        </li>
+        <li class="order__item" data-side="L">
+          <img class="order__icon" src="assets/img/order-dining.webp" alt="">
+          <div class="order__text"><p class="order__name">Dining</p><p class="t-sub order__kr">식사</p></div>
+        </li>
+        <li class="order__item" data-side="R">
+          <img class="order__icon" src="assets/img/order-draw.webp" alt="">
+          <div class="order__text"><p class="order__name">Thanks Draw</p><p class="t-sub order__kr">감사 추첨</p></div>
+        </li>
+      </ol>
+      <img class="order__pearl" id="order-pearl" src="assets/img/pearl.webp" alt="" aria-hidden="true">
+    </div>
+  </section>
+
+
+  <!-- 08 LOCATION — 교통 및 주차 / 지도 -->
+  <section class="section loc" id="location" aria-labelledby="loc-title">
+    <header class="sec-head reveal">
+      <h2 class="t-title" id="loc-title">Location</h2>
+      <p class="t-sub">오시는 길</p>
+    </header>
+
+    <div class="loc__venue reveal">
+      <p class="loc__name">콘래드 서울 <span>5층 파크볼룸</span></p>
+      <p class="loc__addr">서울 영등포구 국제금융로 10 (여의도동)
+        <button type="button" class="loc__copy" data-copy="서울 영등포구 국제금융로 10">주소 복사</button></p>
+    </div>
+
+    <div class="tabs reveal" role="tablist" aria-label="오시는 길 안내">
+      <button type="button" role="tab" id="tab-way" aria-controls="panel-way" aria-selected="true">교통 및 주차</button>
+      <button type="button" role="tab" id="tab-map" aria-controls="panel-map" aria-selected="false" tabindex="-1">지도</button>
+    </div>
+
+    <div class="tabpanel" id="panel-way" role="tabpanel" aria-labelledby="tab-way">
+      <div class="way">
+        <h3 class="way__title"><span class="way__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M9 21l-2 0M17 21l-2 0M8 17l-2 4M16 17l2 4"/><circle cx="9" cy="14" r=".6"/><circle cx="15" cy="14" r=".6"/></svg>
+        </span>지하철</h3>
+        <p class="way__lead"><b class="line line--5">5</b><b class="line line--9">9</b> 여의도역 3번 출구</p>
+        <ol class="way__steps">
+          <li>3번 출구의 무빙워크를 따라 직진</li>
+          <li>IFC 입구로 진입 <small>(L2 연결통로)</small></li>
+          <li>나폴레옹 제과와 테라로사 입구에서 테라로사 쪽으로 우회전</li>
+          <li>직진해서 MUJI(무인양품) 앞 에스컬레이터 상행 탑승</li>
+          <li>L1의 Garden Juno와 쉐이크쉑 사이 호텔 연결 통로 이용</li>
+        </ol>
+      </div>
+      <div class="way">
+        <h3 class="way__title"><span class="way__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M4 16h16v3H4z"/><circle cx="8" cy="13.5" r=".8"/><circle cx="16" cy="13.5" r=".8"/><path d="M6 19v2M18 19v2"/></svg>
+        </span>자가용</h3>
+        <p class="way__lead">Two IFC몰 지하주차장 <b>P5~P7</b></p>
+        <ul class="way__notes">
+          <li>주차 4시간 지원</li>
+          <li>보라색 구역에 주차하시면 호텔과 바로 연결돼요</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="panel-map" role="tabpanel" aria-labelledby="tab-map" hidden>
+      <div class="map" id="kakao-map">
+        <p class="map__fallback" id="map-fallback">지도를 불러오는 중이에요</p>
+      </div>
+      <div class="map__btns">
+        <a class="map__btn" href="https://map.kakao.com/link/map/%EC%BD%98%EB%9E%98%EB%93%9C%20%EC%84%9C%EC%9A%B8,37.5254,126.9266" target="_blank" rel="noopener">카카오맵에서 보기</a>
+        <a class="map__btn" href="https://map.kakao.com/link/to/%EC%BD%98%EB%9E%98%EB%93%9C%20%EC%84%9C%EC%9A%B8,37.5254,126.9266" target="_blank" rel="noopener">길찾기</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 ACCOUNT — 상단 흔들리는 꽃 + 계좌 + 하단 하객 일러스트 -->
+  <section class="section acct" id="account" aria-labelledby="acct-title">
+
+    <div class="acct__flora" aria-hidden="true">
+      <img class="intro__flower intro__flower--l" src="assets/img/intro-flower-l.webp" alt="">
+      <img class="intro__flower intro__flower--r" src="assets/img/intro-flower-r.webp" alt="">
+    </div>
+    <div class="acct__body" id="acct-body">
+      <header class="sec-head reveal">
+      <h2 class="t-title" id="acct-title">With Love</h2>
+      <p class="t-sub">마음 전하실 곳</p>
+    </header>
+
+          <div class="tabs tabs--light" role="tablist" aria-label="계좌 안내">
+            <button type="button" role="tab" id="tab-groom" aria-controls="acct-groom" aria-selected="true">신랑측</button>
+            <button type="button" role="tab" id="tab-bride" aria-controls="acct-bride" aria-selected="false" tabindex="-1">신부측</button>
+          </div>
+          <ul class="acct__list" id="acct-groom" role="tabpanel" aria-labelledby="tab-groom">
+            <li class="acct__item">
+              <p class="acct__who"><span>신랑</span> 박종민</p>
+              <p class="acct__num">카카오뱅크 <span>3333-01-4591341</span></p>
+              <div class="acct__btns"><button type="button" class="acct__btn" data-copy="카카오뱅크 3333014591341">복사</button><a class="acct__btn acct__btn--kp" href="https://qr.kakaopay.com/Ej9ReQMVB" target="_blank" rel="noopener" aria-label="박종민에게 카카오페이 송금">카카오페이 송금</a></div>
+            </li>
+            <li class="acct__item">
+              <p class="acct__who"><span>아버지</span> 박용복</p>
+              <p class="acct__num">농협 <span>356-1625-4635-63</span></p>
+              <div class="acct__btns"><button type="button" class="acct__btn" data-copy="농협 3561625463563">복사</button><a class="acct__btn acct__btn--kp" href="https://qr.kakaopay.com/FOV88qV7e" target="_blank" rel="noopener" aria-label="박용복에게 카카오페이 송금">카카오페이 송금</a></div>
+            </li>
+            <li class="acct__item">
+              <p class="acct__who"><span>어머니</span> 임명분</p>
+              <p class="acct__num">카카오뱅크 <span>3333-37-5463973</span></p>
+              <div class="acct__btns"><button type="button" class="acct__btn" data-copy="카카오뱅크 3333375463973">복사</button><a class="acct__btn acct__btn--kp" href="https://qr.kakaopay.com/FJSpHOqsk" target="_blank" rel="noopener" aria-label="임명분에게 카카오페이 송금">카카오페이 송금</a></div>
+            </li>
+          </ul>
+          <ul class="acct__list" id="acct-bride" role="tabpanel" aria-labelledby="tab-bride" hidden>
+            <li class="acct__item">
+              <p class="acct__who"><span>신부</span> 장혜린</p>
+              <p class="acct__num">우리은행 <span>1002-048-0966-37</span></p>
+              <div class="acct__btns"><button type="button" class="acct__btn" data-copy="우리은행 1002048096637">복사</button><a class="acct__btn acct__btn--kp" href="https://qr.kakaopay.com/Ej7l50Pcm" target="_blank" rel="noopener" aria-label="장혜린에게 카카오페이 송금">카카오페이 송금</a></div>
+            </li>
+            <li class="acct__item">
+              <p class="acct__who"><span>아버지</span> 장용훈</p>
+              <p class="acct__num">우리은행 <span>324-08-059619</span></p>
+              <div class="acct__btns"><button type="button" class="acct__btn" data-copy="우리은행 32408059619">복사</button><a class="acct__btn acct__btn--kp" href="https://qr.kakaopay.com/FdjotEO03" target="_blank" rel="noopener" aria-label="장용훈에게 카카오페이 송금">카카오페이 송금</a></div>
+            </li>
+            <li class="acct__item">
+              <p class="acct__who"><span>어머니</span> 이희경</p>
+              <p class="acct__num">우리은행 <span>324-08-124018</span></p>
+              <div class="acct__btns"><button type="button" class="acct__btn" data-copy="우리은행 32408124018">복사</button><a class="acct__btn acct__btn--kp" href="https://qr.kakaopay.com/FPLuuj9Mq" target="_blank" rel="noopener" aria-label="이희경에게 카카오페이 송금">카카오페이 송금</a></div>
+            </li>
+          </ul>
+    </div>
+    <img class="acct__guests" src="assets/img/acct-guests.webp" width="896" height="457" alt="" aria-hidden="true">
+  </section>
+
+</main>
+
+
+<!-- 참석여부 전달하기 -->
+<div class="rsvp" id="rsvp" role="dialog" aria-modal="true" aria-labelledby="rsvp-title" hidden>
+  <div class="rsvp__dim" data-rsvp-close></div>
+  <form class="rsvp__box" id="rsvp-form" novalidate>
+    <button type="button" class="rsvp__x" data-rsvp-close aria-label="닫기">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <p class="rsvp__script" aria-hidden="true">R.S.V.P</p>
+    <h2 class="rsvp__title" id="rsvp-title">참석여부 전달하기</h2>
+    <p class="rsvp__desc">원활한 예식 준비를 위해 참석여부를 알려주세요.<br>다시 보내시면 마지막 내용으로 바뀌어요.</p>
+
+    <label class="rsvp__label" for="rsvp-name">성함</label>
+    <input class="rsvp__input" id="rsvp-name" name="name" type="text" autocomplete="name" maxlength="20" placeholder="성함을 입력해 주세요" required>
+
+    <fieldset class="rsvp__set">
+      <legend class="rsvp__label">구분</legend>
+      <div class="rsvp__chips">
+        <label><input type="radio" name="side" value="신랑측" required><span>신랑측</span></label>
+        <label><input type="radio" name="side" value="신부측"><span>신부측</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset class="rsvp__set">
+      <legend class="rsvp__label">참석여부</legend>
+      <div class="rsvp__chips">
+        <label><input type="radio" name="attend" value="참석" required><span>참석</span></label>
+        <label><input type="radio" name="attend" value="미참석"><span>미참석</span></label>
+      </div>
+    </fieldset>
+
+    <p class="rsvp__err" id="rsvp-err" role="alert"></p>
+    <button type="submit" class="rsvp__submit" id="rsvp-submit">전달하기</button>
+  </form>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- 갤러리 전체화면 -->
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="사진 전체화면" hidden>
+  <button type="button" class="viewer__close" id="viewer-close" aria-label="닫기">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="viewer__stage" id="viewer-stage">
+    <div class="viewer__track" id="viewer-track"></div>
+  </div>
+  <div class="viewer__bar">
+    <button type="button" class="viewer__nav" id="viewer-prev" aria-label="이전 사진">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <p class="viewer__count" id="viewer-count" aria-live="polite">1 / 1</p>
+    <button type="button" class="viewer__nav" id="viewer-next" aria-label="다음 사진">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>
