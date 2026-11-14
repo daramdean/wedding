@@ -350,35 +350,33 @@ function initGallery(photos) {
   const done = document.getElementById('order-done');
   const pearl = document.getElementById('order-pearl');
   const items = [...track.querySelectorAll('.order__item')];
-  let len = 0, nodes = [];
+  let len = 0, nodes = [], y0 = 0, y1 = 0, lastW = -1, lastH = -1;
 
   // 각 아이콘의 가운데를 지나는 S자 곡선 만들기
-  function build() {
+  // (무거운 계산이라 식순 영역의 크기가 실제로 바뀔 때만 다시 그림)
+  function build(force) {
     const box = track.getBoundingClientRect();
     const W = box.width, H = box.height;
+    if (!force && W === lastW && H === lastH) return;
+    lastW = W; lastH = H;
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     const pts = items.map(li => {
       const r = li.querySelector('.order__icon').getBoundingClientRect();
       return { x: r.left - box.left + r.width / 2, y: r.top - box.top + r.height / 2 };
     });
-    const all = pts;                                       // 첫 식순 그림에서 시작해 마지막 그림에서 끝남
-    let d = `M ${all[0].x} ${all[0].y}`;
-    for (let i = 1; i < all.length; i++) {
-      const a = all[i - 1], b = all[i], k = (b.y - a.y) * 0.55;
+    // 첫 식순 그림에서 시작해 마지막 그림에서 끝남. 곡선 한 구간이 끝나는 곳이 곧 아이콘 자리
+    let d = `M ${pts[0].x} ${pts[0].y}`;
+    nodes = [0];
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i], k = (b.y - a.y) * 0.55;
       d += ` C ${a.x} ${a.y + k}, ${b.x} ${b.y - k}, ${b.x} ${b.y}`;
+      done.setAttribute('d', d);
+      nodes.push(done.getTotalLength());               // 아이콘 위치가 길 위 어디쯤인지(길이)
     }
-    line.setAttribute('d', d); done.setAttribute('d', d);
-    len = line.getTotalLength();
+    line.setAttribute('d', d);
+    len = nodes[nodes.length - 1];
     done.style.strokeDasharray = `${len} ${len}`;
-    // 아이콘 위치가 길 위 어디쯤인지(길이) 미리 계산
-    nodes = pts.map(p => {
-      let best = 0, bd = Infinity;
-      for (let s = 0; s <= len; s += 4) {
-        const q = line.getPointAtLength(s), dd = (q.x - p.x) ** 2 + (q.y - p.y) ** 2;
-        if (dd < bd) { bd = dd; best = s; }
-      }
-      return best;
-    });
+    y0 = pts[0].y; y1 = pts[pts.length - 1].y;
     update();
   }
 
@@ -386,7 +384,6 @@ function initGallery(photos) {
     if (!len) return;
     const r = track.getBoundingClientRect();
     const focus = window.innerHeight * 0.55;              // 화면 가운데보다 조금 아래가 기준
-    const y0 = line.getPointAtLength(0).y, y1 = line.getPointAtLength(len).y;
     const t = Math.max(0, Math.min(1, (focus - r.top - y0) / (y1 - y0)));
     const at = t * len;
     const p = line.getPointAtLength(at);
@@ -400,12 +397,14 @@ function initGallery(photos) {
     if (ticking) return; ticking = true;
     requestAnimationFrame(() => { update(); ticking = false; });
   }, { passive: true });
-  window.addEventListener('resize', build);
+  // 모바일에서 스크롤하면 주소창이 접히며 창 높이가 계속 바뀜 → 창 크기가 아니라 식순 영역 크기를 지켜봄
+  if ('ResizeObserver' in window) new ResizeObserver(() => build()).observe(track);
+  else window.addEventListener('resize', () => build());
   // 이미지가 다 그려진 뒤 위치 계산
   const imgs = items.map(li => li.querySelector('img'));
-  Promise.all(imgs.map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; }))).then(build);
-  if (document.fonts) document.fonts.ready.then(build);
-  build();
+  Promise.all(imgs.map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; }))).then(() => build(true));
+  if (document.fonts) document.fonts.ready.then(() => build(true));
+  build(true);
 })();
 
 /* 공통 — 토스트 · 복사 버튼 */
