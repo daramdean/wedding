@@ -568,15 +568,14 @@ document.addEventListener('click', async e => {
   });
 })();
 
-/* 배경음악 — 첫 터치(커튼 열기 포함) 때 잔잔한 음량으로 시작, 오른쪽 위 버튼으로 끄고 켜기 */
+/* 배경음악 — 기본 켜짐: 열자마자 재생 시도, 브라우저가 막으면 첫 터치 때 잔잔한 음량으로 시작, 오른쪽 위 버튼으로 끄고 켜기 */
 (function () {
   const audio = document.getElementById('bgm');
   const btn = document.getElementById('bgm-btn');
   if (!audio || !btn) return;
   const VOLUME = 0.25;                        // 잔잔한 음량 (0~1)
   let ctx = null, gain = null, on = false, started = false;
-  let wanted = true;
-  try { wanted = localStorage.getItem('bgm') !== 'off'; } catch (_) {}
+  let wanted = true;                          // 기본은 켜짐 (끄기는 이번 방문에만 적용)
 
   btn.hidden = false;                                              // iOS는 미리 불러오지 않아 canplay 를 기다리면 버튼이 안 보임
   audio.addEventListener('error', () => { btn.hidden = true; });   // 음악 파일이 없으면 버튼만 숨김
@@ -596,9 +595,11 @@ document.addEventListener('click', async e => {
   async function play() {
     setupGain();
     try {
-      if (ctx && ctx.state === 'suspended') await ctx.resume();
+      const resumed = ctx && ctx.state === 'suspended' ? ctx.resume().catch(() => {}) : null;   // 터치 직후 바로 호출 (iOS)
       if (!ctx) audio.volume = 0;
       await audio.play();
+      if (resumed) await Promise.race([resumed, new Promise(r => setTimeout(r, 1000))]);
+      if (ctx && ctx.state !== 'running') { audio.pause(); return false; }   // 소리 허용 전이면 무음 재생 대신 다음 터치 때
       fade(VOLUME, 2500);
       on = true; btn.setAttribute('aria-pressed', 'true'); btn.setAttribute('aria-label', '배경음악 끄기');
       return true;
@@ -611,7 +612,6 @@ document.addEventListener('click', async e => {
   btn.addEventListener('click', e => {
     e.stopPropagation(); started = true;
     wanted = !on;
-    try { localStorage.setItem('bgm', wanted ? 'on' : 'off'); } catch (_) {}
     wanted ? play() : stop();
   });
   // 브라우저 정책상 소리는 사용자의 첫 동작 뒤에만 재생 가능
@@ -624,6 +624,8 @@ document.addEventListener('click', async e => {
     if (await play()) { started = true; done(); }               // 실패하면 다음 터치 때 다시 시도
   };
   EVENTS.forEach(t => document.addEventListener(t, first, true));
+  // 열자마자 자동 재생 시도 — 허용하는 브라우저에선 바로 시작, 막히면 첫 터치 때 시작
+  setTimeout(async () => { if (!started && wanted && await play()) { started = true; done(); } }, 300);
   // 화면을 벗어나면 잠시 멈춤
   document.addEventListener('visibilitychange', () => {
     if (!on) return;
