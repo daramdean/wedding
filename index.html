@@ -22,8 +22,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Nanum+Myeongjo:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/curtain-closed-l.webp">
 <link rel="preload" as="image" href="assets/img/curtain-closed-r.webp">
-<link rel="stylesheet" href="css/style.css?v=1115a">
-<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="css/style.css?v=1115b">
+<script>
+document.documentElement.classList.add('js');
+/* 인트로 높이 고정 — 스크롤 중 주소창이 줄고 늘어도 이미지가 확대/축소되지 않게, 가로폭이 바뀔 때만 다시 계산 */
+(function () {
+  var root = document.documentElement, w = 0;
+  function lock() {
+    if (window.innerWidth === w) return;
+    w = window.innerWidth;
+    root.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
+  }
+  lock();
+  window.addEventListener('resize', lock);
+  window.addEventListener('orientationchange', function () { w = 0; setTimeout(lock, 300); });
+})();
+</script>
 </head>
 <body>
 <canvas id="snow" aria-hidden="true"></canvas>

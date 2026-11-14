@@ -78,6 +78,7 @@ img { display: block; max-width: 100%; }
   position: relative;
   height: 100vh;
   height: 100svh;
+  height: calc(var(--vh, 1svh) * 100);   /* JS가 첫 화면 높이를 px로 고정 → 스크롤 중 확대/축소 방지 */
   min-height: 560px;
   max-height: 940px;
   background: var(--ivory);
@@ -126,18 +127,18 @@ img { display: block; max-width: 100%; }
 }
 .intro__name {
   display: block;
-  font-size: clamp(44px, 6.8svh, 58px);
+  font-size: clamp(44px, calc(var(--vh, 1svh) * 6.8), 58px);
 }
 .intro__amp {
   display: block;
   font-family: var(--f-en);
   font-style: italic;
-  font-size: clamp(18px, 2.6svh, 22px);
+  font-size: clamp(18px, calc(var(--vh, 1svh) * 2.6), 22px);
   color: var(--dusty);
   margin: .65em 0 .5em;
 }
 .intro__fullnames {
-  margin-top: clamp(14px, 2.6svh, 24px);
+  margin-top: clamp(14px, calc(var(--vh, 1svh) * 2.6), 24px);
   font-family: var(--f-kr);
   font-size: var(--s-sub);
   letter-spacing: .24em;
@@ -149,13 +150,13 @@ img { display: block; max-width: 100%; }
 .intro__rule {
   display: block;
   width: 36px; height: 1px;
-  margin: clamp(14px, 2.6svh, 24px) auto;
+  margin: clamp(14px, calc(var(--vh, 1svh) * 2.6), 24px) auto;
   background: var(--powder);
 }
 .intro__message {
   font-family: var(--f-en);
   font-style: italic;
-  font-size: clamp(15px, 2.1svh, 17px);
+  font-size: clamp(15px, calc(var(--vh, 1svh) * 2.1), 17px);
   line-height: 1.6;
   letter-spacing: .02em;
   color: var(--deep);
@@ -908,7 +909,7 @@ body.is-viewer { overflow: hidden; }
    ========================================================= */
 .intro__rsvp {
   position: relative; z-index: 3;
-  margin-top: clamp(18px, 3svh, 28px);
+  margin-top: clamp(18px, calc(var(--vh, 1svh) * 3), 28px);
   padding: 11px 26px;
   border: 1px solid var(--deep); border-radius: 999px;
   background: rgba(255, 255, 255, .88);
