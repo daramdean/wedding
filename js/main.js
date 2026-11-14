@@ -91,8 +91,16 @@ const Curtain = (function () {
       alpha: far ? 0.55 + Math.random() * 0.2 : 0.8 + Math.random() * 0.2
     };
   }
+  // 인앱 브라우저(카톡·인스타 등)는 스크롤 시 툴바가 숨으며 창 높이가 매 프레임 바뀜.
+  // 그때마다 캔버스를 다시 만들면 화면이 깜빡이고 눈이 늘어나 보이므로,
+  // 처음부터 화면 전체 높이로 넉넉히 잡고 가로폭이 바뀔 때만(또는 더 커질 때만) 다시 만듦.
   function resize() {
-    W = window.innerWidth; H = window.innerHeight;
+    const w = window.innerWidth, h = window.innerHeight;
+    if (w === W && h <= H) return;
+    const full = h >= w ? Math.max(screen.width, screen.height) : Math.min(screen.width, screen.height);
+    H = Math.max(h, w === W ? H : 0, full || 0);
+    W = w;
+    canvas.style.height = H + 'px';
     canvas.width = W * dpr; canvas.height = H * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const n = count();

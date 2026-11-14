@@ -65,8 +65,8 @@ img { display: block; max-width: 100%; }
 
 /* ---------- snow (전체 화면 오버레이) ---------- */
 #snow {
-  position: fixed; inset: 0;
-  width: 100%; height: 100%;
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;          /* JS가 화면 전체 높이(px)로 고정 → 툴바가 접혀도 늘어나지 않음 */
   pointer-events: none;
   z-index: 50;
 }
