@@ -128,6 +128,12 @@ img { display: block; max-width: 100%; }
 .intro__name {
   display: block;
   font-size: clamp(44px, calc(var(--vh, 1svh) * 6.8), 58px);
+  /* Great Vibes 대문자(J, H 등)의 꼬리 장식은 글자 상자 밖으로 삐져나옴.
+     등장 애니메이션 중(transform·filter 적용) 브라우저가 상자 크기만큼만 그려서
+     꼬리가 잘렸다가 애니메이션이 끝나는 순간 '깜박' 나타나던 문제 →
+     여백으로 상자를 넓혀 장식을 안에 포함시키고, 같은 크기의 음수 margin으로 배치는 그대로 유지 */
+  padding: .3em .6em;
+  margin: -.3em -.6em;
 }
 .intro__amp {
   display: block;
