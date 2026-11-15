@@ -670,13 +670,23 @@ body.is-curtain { overflow: hidden; }
   display: flex; align-items: center; justify-content: center;
 }
 .viewer__slide img { max-width: 100%; max-height: 100%; object-fit: contain; }
-.viewer__close {
-  position: absolute; z-index: 2;
-  top: calc(env(safe-area-inset-top, 0px) + 12px); right: 12px;
-  width: 44px; height: 44px; border: 0; background: none; cursor: pointer;
+/* 상단 바: 하단 바와 같은 높이(76px)로 맞춰 사진이 화면 정중앙에 오고, 닫기 버튼이 사진과 겹치지 않음 */
+.viewer__top {
+  flex: none;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: calc(env(safe-area-inset-top, 0px) + 18px) 14px 14px;
 }
+.viewer__close {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .35);
+  background: rgba(20, 24, 31, .55);   /* 밝은 사진 위에서도 보이도록 어두운 바탕 */
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.viewer .viewer__close svg { width: 20px; height: 20px; }
 .viewer svg { width: 24px; height: 24px; fill: none; stroke: #fff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .viewer__bar {
+  flex: none;
   display: flex; align-items: center; justify-content: center; gap: 28px;
   padding: 14px 0 calc(env(safe-area-inset-bottom, 0px) + 18px);
 }

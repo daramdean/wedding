@@ -22,7 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Nanum+Myeongjo:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/curtain-closed-l.webp">
 <link rel="preload" as="image" href="assets/img/curtain-closed-r.webp">
-<link rel="stylesheet" href="css/style.css?v=1115f">
+<link rel="stylesheet" href="css/style.css?v=1115g">
 <script>
 document.documentElement.classList.add('js');
 /* 인트로 높이 고정 — 스크롤 중 주소창이 줄고 늘어도 이미지가 확대/축소되지 않게, 가로폭이 바뀔 때만 다시 계산 */
@@ -375,9 +375,11 @@ document.documentElement.classList.add('js');
 
 <!-- 갤러리 전체화면 -->
 <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="사진 전체화면" hidden>
-  <button type="button" class="viewer__close" id="viewer-close" aria-label="닫기">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-  </button>
+  <div class="viewer__top">
+    <button type="button" class="viewer__close" id="viewer-close" aria-label="닫기">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
   <div class="viewer__stage" id="viewer-stage">
     <div class="viewer__track" id="viewer-track"></div>
   </div>
