@@ -497,7 +497,7 @@ document.addEventListener('click', async e => {
 (function () {
   // ▼ Apps Script 웹 앱 배포 후 받은 URL(https://script.google.com/macros/s/…/exec)을 넣어 주세요.
   //   설치 방법은 저장소 루트의 rsvp-apps-script.gs 맨 위 안내 참고
-  const RSVP_ENDPOINT = '';
+  const RSVP_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxj4I0raZWPwk3Tl-8N7BlVS4PlDQlbK9H7ugjSOb2tMK7YxliRAICJALfyHu-5Tx3wNA/exec';
   const READY = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(RSVP_ENDPOINT);
 
   const wrap = document.getElementById('rsvp');
