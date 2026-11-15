@@ -953,11 +953,11 @@ body.is-viewer { overflow: hidden; }
 .intro__rsvp {
   position: relative; z-index: 3;
   margin-top: clamp(18px, calc(var(--vh, 1svh) * 3), 28px);
-  padding: 11px 26px;
+  padding: 9px 22px;
   border: 1px solid var(--deep); border-radius: 999px;
   background: rgba(255, 255, 255, .88);
   -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
-  font-family: var(--f-kr); font-size: 14px; letter-spacing: .08em; color: var(--deep);
+  font-family: var(--f-kr); font-size: 13px; letter-spacing: .08em; color: var(--deep);
   white-space: nowrap; cursor: pointer;
   box-shadow: 0 4px 14px rgba(59, 69, 82, .12);
 }
