@@ -453,18 +453,30 @@ document.addEventListener('click', async e => {
     }
   }));
 
-  function fallback(msg) {
-    const f = document.getElementById('map-fallback'); if (f) f.innerHTML = msg;
-  }
   function showMap() {
     if (map) { map.relayout(); map.setCenter(new kakao.maps.LatLng(VENUE.lat, VENUE.lng)); return; }
-    if (!KAKAO_JS_KEY) { fallback('지도는 청첩장을 배포한 뒤에 표시돼요.<br>아래 버튼으로 카카오맵에서 바로 볼 수 있어요.'); return; }
+    if (embedded) return;
+    if (!KAKAO_JS_KEY) return embed();              // 키가 없으면 키 없이 쓰는 구글 지도 임베드
     if (window.kakao && kakao.maps) return draw();
     const s = document.createElement('script');
     s.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_JS_KEY}&autoload=false`;
-    s.onload = () => kakao.maps.load(draw);
-    s.onerror = () => fallback('지도를 불러오지 못했어요.<br>아래 버튼으로 카카오맵에서 확인해 주세요.');
+    s.onload = () => (window.kakao && kakao.maps ? kakao.maps.load(draw) : embed());
+    s.onerror = embed;                               // 키/도메인 오류 등으로 SDK를 못 불러오면 대체
     document.head.appendChild(s);
+  }
+  let embedded = false;
+  function embed() {
+    if (map || embedded) return;
+    embedded = true;
+    const el = document.getElementById('kakao-map');
+    const f = document.createElement('iframe');
+    f.src = `https://maps.google.com/maps?q=${encodeURIComponent(VENUE.name)}%40${VENUE.lat},${VENUE.lng}&z=16&hl=ko&output=embed`;
+    f.title = `${VENUE.name} 위치 지도`;
+    f.loading = 'lazy';
+    f.referrerPolicy = 'no-referrer-when-downgrade';
+    f.className = 'map__frame';
+    f.onload = () => { const fb = document.getElementById('map-fallback'); if (fb) fb.remove(); };
+    el.appendChild(f);
   }
   function draw() {
     const el = document.getElementById('kakao-map');
