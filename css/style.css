@@ -1108,20 +1108,15 @@ body.is-curtain .totop, body.is-viewer .totop, body.is-rsvp .totop { opacity: 0;
   opacity: 0;
 }
 .lamp__beam {                         /* 전구에서 타이틀로 내려가는 은은한 빛 */
-  position: absolute; left: -45px; top: 104px;
+  position: absolute; left: -22px; top: 26px;     /* 전구를 따라 함께 흔들림 */
   width: 90px; height: 60px;
   background: radial-gradient(ellipse 50% 100% at 50% 0, rgba(255, 236, 208, .12), rgba(255, 236, 208, .04) 55%, rgba(255, 236, 208, 0) 80%);
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%);
           mask-image: linear-gradient(to bottom, transparent, #000 40%);
   opacity: 0;
 }
-.lamp.is-lit .lamp__on    { animation: lampOn .9s ease-out forwards; }
-.lamp.is-lit .lamp__halo  { animation: lampOn .9s ease-out forwards; }
-.lamp.is-lit .lamp__beam  { animation: lampBeam 1.6s ease-out .15s forwards; }
-@keyframes lampOn {                   /* 딸깍 — 살짝 깜빡이며 켜짐 */
-  0% { opacity: 0; } 18% { opacity: .75; } 30% { opacity: .25; } 55% { opacity: .9; } 100% { opacity: 1; }
-}
-@keyframes lampBeam { from { opacity: 0; } to { opacity: 1; } }
+.lamp__on, .lamp__halo, .lamp__beam { transition: opacity .25s ease-out; }
+.lamp.is-lit .lamp__on, .lamp.is-lit .lamp__halo, .lamp.is-lit .lamp__beam { opacity: 1; }   /* 깜빡임 없이 바로 켜짐 */
 /* 타이틀: 위에서 내려온 빛을 받아 윗부분이 따뜻하게 밝아짐 */
 .loc .sec-head { position: relative; }
 .loc__title { position: relative; }
@@ -1131,7 +1126,7 @@ body.is-curtain .totop, body.is-viewer .totop, body.is-rsvp .totop { opacity: 0;
   background: radial-gradient(ellipse 34% 60% at 50% 0, #FFDDA8 0%, rgba(255, 224, 176, .7) 45%, rgba(255, 226, 180, 0) 100%);
   -webkit-background-clip: text; background-clip: text;
   color: transparent;
-  opacity: 0; transition: opacity 1.6s ease .2s;
+  opacity: 0; transition: opacity .4s ease-out;
   pointer-events: none;
 }
 .loc__title.is-lit::after { opacity: 1; }
