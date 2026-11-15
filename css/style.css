@@ -412,7 +412,17 @@ body.is-curtain { overflow: hidden; }
   margin: 0 auto;
   aspect-ratio: 680 / 1740;
   cursor: pointer;
-  filter: drop-shadow(0 18px 24px rgba(40, 60, 90, .25));
+}
+/* 그림자: filter: drop-shadow 를 쓰면 iOS 에서 기계 전체가 별도 레이어로 래스터화되고
+   스트립 애니메이션 중 매 프레임 다시 그려져, 레이어 경계(사각형)가 배경 위로 깜박이며 드러남.
+   프레임 이미지의 불투명 영역(40,30)-(640,1670) 위치에 box-shadow 로 대체 */
+.booth__machine::before {
+  content: "";
+  position: absolute; z-index: 0;
+  left: 5.88%; right: 5.88%;         /* 40/680 */
+  top: 1.72%; bottom: 4.02%;         /* 30/1740, 70/1740 */
+  box-shadow: 0 18px 24px rgba(40, 60, 90, .25);
+  pointer-events: none;
 }
 .booth__back, .booth__frame {
   position: absolute; inset: 0;
@@ -445,6 +455,7 @@ body.is-curtain { overflow: hidden; }
   background: #fff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, .18);
   transform: translate(-50%, -112%);            /* 시작: 창 위쪽에 숨어 있음 */
+  backface-visibility: hidden;                  /* 스트립만 따로 합성 → 주변 재래스터화 방지 */
 }
 /* 사진은 원본 비율(약 6:5) 그대로 — 잘리는 부분 없음 */
 .booth__strip img {
