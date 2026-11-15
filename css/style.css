@@ -1115,13 +1115,6 @@ body.is-curtain .totop, body.is-viewer .totop, body.is-rsvp .totop { opacity: 0;
           mask-image: linear-gradient(to bottom, transparent, #000 40%);
   opacity: 0;
 }
-.lamp__pool {                         /* 타이틀 뒤 바닥에 맺힌 빛 */
-  position: absolute; left: 50%;
-  width: 150px; height: 44px; margin-left: -75px; top: -10px;
-  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255, 234, 204, .28), rgba(255, 234, 204, .10) 50%, rgba(255, 234, 204, 0) 100%);
-  opacity: 0; transition: opacity 1.6s ease .2s;
-  pointer-events: none;
-}
 .lamp.is-lit .lamp__on    { animation: lampOn .9s ease-out forwards; }
 .lamp.is-lit .lamp__halo  { animation: lampOn .9s ease-out forwards; }
 .lamp.is-lit .lamp__beam  { animation: lampBeam 1.6s ease-out .15s forwards; }
@@ -1131,16 +1124,14 @@ body.is-curtain .totop, body.is-viewer .totop, body.is-rsvp .totop { opacity: 0;
 @keyframes lampBeam { from { opacity: 0; } to { opacity: 1; } }
 /* 타이틀: 위에서 내려온 빛을 받아 윗부분이 따뜻하게 밝아짐 */
 .loc .sec-head { position: relative; }
-.loc__title { position: relative; transition: text-shadow 1.6s ease .2s; }
+.loc__title { position: relative; }
 .loc__title::after {
   content: attr(data-text);
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse 34% 60% at 50% 0, #FFE2B4 0%, rgba(255, 226, 180, .6) 45%, rgba(255, 226, 180, 0) 100%);
+  background: radial-gradient(ellipse 34% 60% at 50% 0, #FFDDA8 0%, rgba(255, 224, 176, .7) 45%, rgba(255, 226, 180, 0) 100%);
   -webkit-background-clip: text; background-clip: text;
   color: transparent;
   opacity: 0; transition: opacity 1.6s ease .2s;
   pointer-events: none;
 }
-.loc__title.is-lit { text-shadow: 0 -1px 4px rgba(255, 234, 204, .22); }
 .loc__title.is-lit::after { opacity: 1; }
-.sec-head:has(.loc__title.is-lit) .lamp__pool { opacity: .6; }
