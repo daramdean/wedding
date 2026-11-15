@@ -91,8 +91,16 @@ const Curtain = (function () {
       alpha: far ? 0.55 + Math.random() * 0.2 : 0.8 + Math.random() * 0.2
     };
   }
+  // 인앱 브라우저(카톡·인스타 등)는 스크롤 시 툴바가 숨으며 창 높이가 매 프레임 바뀜.
+  // 그때마다 캔버스를 다시 만들면 화면이 깜빡이고 눈이 늘어나 보이므로,
+  // 처음부터 화면 전체 높이로 넉넉히 잡고 가로폭이 바뀔 때만(또는 더 커질 때만) 다시 만듦.
   function resize() {
-    W = window.innerWidth; H = window.innerHeight;
+    const w = window.innerWidth, h = window.innerHeight;
+    if (w === W && h <= H) return;
+    const full = h >= w ? Math.max(screen.width, screen.height) : Math.min(screen.width, screen.height);
+    H = Math.max(h, w === W ? H : 0, full || 0);
+    W = w;
+    canvas.style.height = H + 'px';
     canvas.width = W * dpr; canvas.height = H * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const n = count();
@@ -350,35 +358,33 @@ function initGallery(photos) {
   const done = document.getElementById('order-done');
   const pearl = document.getElementById('order-pearl');
   const items = [...track.querySelectorAll('.order__item')];
-  let len = 0, nodes = [];
+  let len = 0, nodes = [], y0 = 0, y1 = 0, lastW = -1, lastH = -1;
 
   // 각 아이콘의 가운데를 지나는 S자 곡선 만들기
-  function build() {
+  // (무거운 계산이라 식순 영역의 크기가 실제로 바뀔 때만 다시 그림)
+  function build(force) {
     const box = track.getBoundingClientRect();
     const W = box.width, H = box.height;
+    if (!force && W === lastW && H === lastH) return;
+    lastW = W; lastH = H;
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     const pts = items.map(li => {
       const r = li.querySelector('.order__icon').getBoundingClientRect();
       return { x: r.left - box.left + r.width / 2, y: r.top - box.top + r.height / 2 };
     });
-    const all = pts;                                       // 첫 식순 그림에서 시작해 마지막 그림에서 끝남
-    let d = `M ${all[0].x} ${all[0].y}`;
-    for (let i = 1; i < all.length; i++) {
-      const a = all[i - 1], b = all[i], k = (b.y - a.y) * 0.55;
+    // 첫 식순 그림에서 시작해 마지막 그림에서 끝남. 곡선 한 구간이 끝나는 곳이 곧 아이콘 자리
+    let d = `M ${pts[0].x} ${pts[0].y}`;
+    nodes = [0];
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i], k = (b.y - a.y) * 0.55;
       d += ` C ${a.x} ${a.y + k}, ${b.x} ${b.y - k}, ${b.x} ${b.y}`;
+      done.setAttribute('d', d);
+      nodes.push(done.getTotalLength());               // 아이콘 위치가 길 위 어디쯤인지(길이)
     }
-    line.setAttribute('d', d); done.setAttribute('d', d);
-    len = line.getTotalLength();
+    line.setAttribute('d', d);
+    len = nodes[nodes.length - 1];
     done.style.strokeDasharray = `${len} ${len}`;
-    // 아이콘 위치가 길 위 어디쯤인지(길이) 미리 계산
-    nodes = pts.map(p => {
-      let best = 0, bd = Infinity;
-      for (let s = 0; s <= len; s += 4) {
-        const q = line.getPointAtLength(s), dd = (q.x - p.x) ** 2 + (q.y - p.y) ** 2;
-        if (dd < bd) { bd = dd; best = s; }
-      }
-      return best;
-    });
+    y0 = pts[0].y; y1 = pts[pts.length - 1].y;
     update();
   }
 
@@ -386,7 +392,6 @@ function initGallery(photos) {
     if (!len) return;
     const r = track.getBoundingClientRect();
     const focus = window.innerHeight * 0.55;              // 화면 가운데보다 조금 아래가 기준
-    const y0 = line.getPointAtLength(0).y, y1 = line.getPointAtLength(len).y;
     const t = Math.max(0, Math.min(1, (focus - r.top - y0) / (y1 - y0)));
     const at = t * len;
     const p = line.getPointAtLength(at);
@@ -400,12 +405,14 @@ function initGallery(photos) {
     if (ticking) return; ticking = true;
     requestAnimationFrame(() => { update(); ticking = false; });
   }, { passive: true });
-  window.addEventListener('resize', build);
+  // 모바일에서 스크롤하면 주소창이 접히며 창 높이가 계속 바뀜 → 창 크기가 아니라 식순 영역 크기를 지켜봄
+  if ('ResizeObserver' in window) new ResizeObserver(() => build()).observe(track);
+  else window.addEventListener('resize', () => build());
   // 이미지가 다 그려진 뒤 위치 계산
   const imgs = items.map(li => li.querySelector('img'));
-  Promise.all(imgs.map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; }))).then(build);
-  if (document.fonts) document.fonts.ready.then(build);
-  build();
+  Promise.all(imgs.map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; }))).then(() => build(true));
+  if (document.fonts) document.fonts.ready.then(() => build(true));
+  build(true);
 })();
 
 /* 공통 — 토스트 · 복사 버튼 */
@@ -516,8 +523,10 @@ document.addEventListener('click', async e => {
 
 /* 참석여부 전달하기 — 구글 스프레드시트(Apps Script)로 전송 */
 (function () {
-  // ▼ Apps Script 웹 앱 배포 후 받은 URL을 넣어 주세요 (rsvp-apps-script.gs 안내 참고)
-  const RSVP_ENDPOINT = '';
+  // ▼ Apps Script 웹 앱 배포 후 받은 URL(https://script.google.com/macros/s/…/exec)을 넣어 주세요.
+  //   설치 방법은 저장소 루트의 rsvp-apps-script.gs 맨 위 안내 참고
+  const RSVP_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxj4I0raZWPwk3Tl-8N7BlVS4PlDQlbK9H7ugjSOb2tMK7YxliRAICJALfyHu-5Tx3wNA/exec';
+  const READY = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(RSVP_ENDPOINT);
 
   const wrap = document.getElementById('rsvp');
   const form = document.getElementById('rsvp-form');
@@ -554,12 +563,20 @@ document.addEventListener('click', async e => {
     if (!side) { err.textContent = '구분을 선택해 주세요.'; return; }
     if (!attend) { err.textContent = '참석여부를 선택해 주세요.'; return; }
     err.textContent = '';
-    if (!RSVP_ENDPOINT) { err.textContent = '아직 전송 준비 중이에요. 잠시 후 다시 시도해 주세요.'; return; }
+    if (!READY) { err.textContent = '아직 전송 준비 중이에요. 잠시 후 다시 시도해 주세요.'; return; }
 
     submit.disabled = true; submit.textContent = '전달하는 중…';
     try {
       // text/plain 으로 보내면 브라우저 사전 요청(CORS preflight) 없이 Apps Script에 바로 전달됨
-      const res = await fetch(RSVP_ENDPOINT, { method: 'POST', body: JSON.stringify({ name, side, attend }) });
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 15000);
+      const res = await fetch(RSVP_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ name, side, attend }),
+        redirect: 'follow',
+        signal: ctrl.signal,
+      }).finally(() => clearTimeout(timer));
       const data = await res.json().catch(() => ({ ok: res.ok }));
       if (!data.ok) throw new Error(data.error || 'fail');
       try { localStorage.setItem('rsvp-name', name); } catch (_) {}
