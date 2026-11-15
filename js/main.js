@@ -495,8 +495,10 @@ document.addEventListener('click', async e => {
 
 /* 참석여부 전달하기 — 구글 스프레드시트(Apps Script)로 전송 */
 (function () {
-  // ▼ Apps Script 웹 앱 배포 후 받은 URL을 넣어 주세요 (rsvp-apps-script.gs 안내 참고)
+  // ▼ Apps Script 웹 앱 배포 후 받은 URL(https://script.google.com/macros/s/…/exec)을 넣어 주세요.
+  //   설치 방법은 저장소 루트의 rsvp-apps-script.gs 맨 위 안내 참고
   const RSVP_ENDPOINT = '';
+  const READY = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(RSVP_ENDPOINT);
 
   const wrap = document.getElementById('rsvp');
   const form = document.getElementById('rsvp-form');
@@ -533,12 +535,20 @@ document.addEventListener('click', async e => {
     if (!side) { err.textContent = '구분을 선택해 주세요.'; return; }
     if (!attend) { err.textContent = '참석여부를 선택해 주세요.'; return; }
     err.textContent = '';
-    if (!RSVP_ENDPOINT) { err.textContent = '아직 전송 준비 중이에요. 잠시 후 다시 시도해 주세요.'; return; }
+    if (!READY) { err.textContent = '아직 전송 준비 중이에요. 잠시 후 다시 시도해 주세요.'; return; }
 
     submit.disabled = true; submit.textContent = '전달하는 중…';
     try {
       // text/plain 으로 보내면 브라우저 사전 요청(CORS preflight) 없이 Apps Script에 바로 전달됨
-      const res = await fetch(RSVP_ENDPOINT, { method: 'POST', body: JSON.stringify({ name, side, attend }) });
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 15000);
+      const res = await fetch(RSVP_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ name, side, attend }),
+        redirect: 'follow',
+        signal: ctrl.signal,
+      }).finally(() => clearTimeout(timer));
       const data = await res.json().catch(() => ({ ok: res.ok }));
       if (!data.ok) throw new Error(data.error || 'fail');
       try { localStorage.setItem('rsvp-name', name); } catch (_) {}
