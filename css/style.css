@@ -537,6 +537,13 @@ body.is-curtain { overflow: hidden; }
   display: block; width: 100%; height: auto;
   filter: drop-shadow(0 0 1px rgba(59, 69, 82, .35)) drop-shadow(0 5px 8px rgba(59, 69, 82, .25));
 }
+/* 신부 스티커는 베일 트레인·부케까지 여백 안에 담느라 원래 자리(900×796)보다 크다.
+   인물 크기·위치는 예전과 같게 두고, 넘치는 여백만 바깥으로 — 레이아웃 상자 높이는 그대로 */
+.person--bride .person__sticker img {
+  width: 110.556%;
+  margin: -1.459% 0 -2.208% -4.408%;
+  max-width: none;
+}
 .person__sticker--placeholder {
   aspect-ratio: 3 / 4;
   display: flex; align-items: center; justify-content: center;
