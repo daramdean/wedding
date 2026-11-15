@@ -237,7 +237,7 @@ const Curtain = (function () {
   });
 })();
 
-/* 06 — 갤러리: 3×3 그리드 + 전체화면 뷰어 (스와이프·버튼, 확대 금지) */
+/* 06 — 갤러리: 3×4 그리드 + 전체화면 뷰어 (스와이프·버튼, 확대 금지) */
 window.GALLERY_READY = fetch('assets/gallery/gallery.json', { cache: 'no-cache' })
   .then(r => r.json()).then(d => d.photos)
   .catch(() => Array.from({ length: 36 }, (_, i) => { const n = String(i + 1).padStart(2, '0'); return { full: `assets/gallery/g${n}.webp`, thumb: `assets/gallery/g${n}-t.webp` }; }))
@@ -250,8 +250,8 @@ function initGallery(photos) {
   const viewer = document.getElementById('viewer');
   if (!grid || !viewer) return;
 
-  // 그리드 (처음 9장)
-  grid.innerHTML = photos.slice(0, 9).map((p, i) =>
+  // 그리드 (처음 12장, 3×4)
+  grid.innerHTML = photos.slice(0, 12).map((p, i) =>
     `<li><button type="button" data-i="${i}" aria-label="${i + 1}번째 사진 크게 보기">` +
     `<img src="${p.thumb}" alt="" draggable="false"></button></li>`).join('');
 
@@ -591,7 +591,7 @@ document.addEventListener('click', async e => {
 })();
 
 /* 리소스 미리 불러오기
-   - 진입 시: 모든 섹션 그림(HTML 이미지는 즉시 로드) + CSS 배경 그림 + 갤러리 대표 9장(썸네일·원본)
+   - 진입 시: 모든 섹션 그림(HTML 이미지는 즉시 로드) + CSS 배경 그림 + 갤러리 대표 12장(썸네일·원본)
    - 그 뒤 여유가 생기면: 나머지 갤러리 원본을 한 장씩 천천히 */
 (function () {
   const CSS_BG = ['assets/img/booth-bg.webp', 'assets/img/invite-card.webp', 'assets/img/gallery-stripe.webp'];
@@ -603,10 +603,10 @@ document.addEventListener('click', async e => {
 
   (window.GALLERY_READY || Promise.resolve([])).then(photos => {
     if (!photos || !photos.length) return;
-    photos.slice(0, 9).forEach(p => load(p.full));                // 대표 9장 원본
+    photos.slice(0, 12).forEach(p => load(p.full));               // 대표 12장 원본
     if (slow) return;                                             // 데이터 절약 모드에선 여기까지
     window.addEventListener('load', () => {
-      let k = 9;
+      let k = 12;
       const next = () => { if (k >= photos.length) return; load(photos[k++].full).then(() => idle(next)); };
       setTimeout(() => idle(next), 2500);                         // 첫 화면이 다 뜬 뒤 천천히 시작
     });
