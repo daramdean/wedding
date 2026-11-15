@@ -929,6 +929,13 @@ body.is-viewer { overflow: hidden; }
 .acct__num { margin-top: 2px; font-size: 13px; color: var(--gray); }
 .acct__num span { font-family: var(--f-en); font-size: 15px; letter-spacing: .04em; color: var(--ink); }
 .acct__num--empty { color: var(--dusty); }
+/* 브라우저가 계좌번호를 전화번호로 인식해 링크로 감싸거나 색·밑줄을 바꾸는 것 방지 */
+.acct__num a, .acct__num a:link, .acct__num a:visited,
+.acct__num a[href^="tel"], .acct__num a[x-apple-data-detectors] {
+  color: inherit !important; text-decoration: none !important;
+  font: inherit !important; letter-spacing: inherit !important;
+  background: none !important; border: 0 !important; pointer-events: none;
+}
 .acct__btns { display: flex; gap: 6px; margin-top: 8px; }
 .acct__btn {
   flex: 1; padding: 7px 0; text-align: center; text-decoration: none;
