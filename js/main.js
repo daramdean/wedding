@@ -351,7 +351,7 @@ function initGallery(photos) {
 
 /* 08 LOCATION — 진주 펜던트 조명
    식순의 진주가 섹션 맨 위에 닿으면 줄에 매달려 떨어지고(살짝 튕김),
-   한두 번 대롱거리다 멈추는 순간 불이 켜지며 Location 타이틀을 은은하게 비춤 */
+   떨어지자마자 불이 켜지고, 켜진 채로 한두 번 대롱거리다 멈춤. Location 타이틀을 은은하게 비춤 */
 (function () {
   const lamp = document.getElementById('loc-lamp');
   const arm = document.getElementById('lamp-arm');
@@ -389,10 +389,11 @@ function initGallery(photos) {
       const s = S0 + (1 - S0) * (1 - Math.pow(1 - Math.min(1, t / 380), 3));
       const deg = A * Math.exp(-t / TAU) * Math.sin(W * t);
       set(Math.max(0, c), s, deg);
-      if (!settled && t > 1450) { settled = true; set(CORD, 1, 0); lightOn(); return; }
+      if (!settled && t > 1450) { settled = true; set(CORD, 1, 0); return; }
       raf = requestAnimationFrame(frame);
     }
     set(0, S0, 0);
+    lightOn();                                     // 내려오자마자 바로 켜진 채로 대롱거림
     raf = requestAnimationFrame(frame);
   }
   function leave() {
