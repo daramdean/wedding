@@ -349,7 +349,7 @@ function initGallery(photos) {
   }, { passive: false });
 })();
 
-/* [테스트] 08 LOCATION — 진주 펜던트 조명
+/* 08 LOCATION — 진주 펜던트 조명
    식순의 진주가 섹션 맨 위에 닿으면 줄에 매달려 떨어지고(살짝 튕김),
    한두 번 대롱거리다 멈추는 순간 불이 켜지며 Location 타이틀을 은은하게 비춤 */
 (function () {
@@ -441,7 +441,7 @@ function initGallery(photos) {
     line.setAttribute('d', d);
     len = nodes[nodes.length - 1];
     done.style.strokeDasharray = `${len} ${len}`;
-    // [테스트] 마지막 '감사 추첨'에서 끝나지 않고, 오시는길 섹션 맨 위 가운데까지 이어짐
+    // 마지막 '감사 추첨'에서 끝나지 않고, 오시는길 섹션 맨 위 가운데까지 이어짐
     const loc = document.getElementById('location');
     let last = pts[pts.length - 1];
     if (loc && document.getElementById('loc-lamp')) {
@@ -469,7 +469,7 @@ function initGallery(photos) {
     pearl.style.transform = `translate(${p.x}px, ${p.y}px)`;
     done.style.strokeDashoffset = len - at;
     items.forEach((li, i) => li.classList.toggle('is-on', at >= nodes[i] - 24));
-    // [테스트] 진주가 오시는길 섹션에 닿으면 조명으로 바뀜 (다시 위로 올라가면 진주로 돌아옴)
+    // 진주가 오시는길 섹션에 닿으면 조명으로 바뀜 (다시 위로 올라가면 진주로 돌아옴)
     const arrived = t >= 0.999;
     if (arrived !== pearlArrived) {
       pearlArrived = arrived;

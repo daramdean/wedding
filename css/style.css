@@ -1057,7 +1057,7 @@ body.is-curtain .totop, body.is-viewer .totop, body.is-rsvp .totop { opacity: 0;
 @media (prefers-reduced-motion: reduce) { .totop { transition: opacity .2s; transform: none; } }
 
 /* =========================================================
-   [테스트] 08 LOCATION — 진주 펜던트 조명
+   08 LOCATION — 진주 펜던트 조명
    ========================================================= */
 .loc.has-lamp { padding-top: 168px; }
 .lamp {
