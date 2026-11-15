@@ -607,7 +607,7 @@ body.is-curtain { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { .js .pop { opacity: 1; scale: 1; transition: none; } }
 
 /* =========================================================
-   06 GALLERY — 스트라이프 배경 위 아이보리 패널 + 3×3 그리드
+   06 GALLERY — 스트라이프 배경 위 아이보리 패널 + 3×4 그리드
    ========================================================= */
 .gallery {
   padding: 56px 18px;
