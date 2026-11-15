@@ -349,6 +349,63 @@ function initGallery(photos) {
   }, { passive: false });
 })();
 
+/* [테스트] 08 LOCATION — 진주 펜던트 조명
+   식순의 진주가 섹션 맨 위에 닿으면 줄에 매달려 떨어지고(살짝 튕김),
+   한두 번 대롱거리다 멈추는 순간 불이 켜지며 Location 타이틀을 은은하게 비춤 */
+(function () {
+  const lamp = document.getElementById('loc-lamp');
+  const arm = document.getElementById('lamp-arm');
+  const title = document.getElementById('loc-title');
+  if (!lamp || !arm) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const CORD = 78, BULB = 60, S0 = 26 / BULB;     // 줄 길이, 조명 크기, 시작 크기(진주 크기)
+  let raf = 0, litTimer = 0;
+
+  function set(c, s, deg) {
+    arm.style.setProperty('--cord', c.toFixed(1) + 'px');
+    arm.style.setProperty('--s', s.toFixed(3));
+    arm.style.transform = `rotate(${deg.toFixed(2)}deg)`;
+  }
+  function lightOn() { lamp.classList.add('is-lit'); title && title.classList.add('is-lit'); }
+
+  function arrive() {
+    cancelAnimationFrame(raf); clearTimeout(litTimer);
+    lamp.classList.add('is-hung');
+    if (reduce) { set(CORD, 1, 0); lightOn(); return; }
+    // 줄 길이: 중력으로 떨어지다 끝에서 스프링처럼 한 번 튕김
+    let c = 0, v = 0.18, last = null, t0 = null, settled = false;
+    const G = 0.0011, K = 0.0011, D = 0.018;
+    const A = 9, W = 2 * Math.PI / 1250, TAU = 850; // 흔들림: 처음 9도, 주기 1.25초, 서서히 잦아듦
+    function frame(now) {
+      if (t0 === null) { t0 = last = now; }
+      let dt = Math.min(32, now - last); last = now;
+      for (let i = 0; i < dt; i += 4) {            // 4ms 단위로 계산
+        const h = Math.min(4, dt - i);
+        const a = c < CORD ? G : -K * (c - CORD) - D * v;
+        v += a * h; c += v * h;
+        if (c > CORD && Math.abs(v) < 0.002 && Math.abs(c - CORD) < 0.3) { c = CORD; v = 0; }
+      }
+      const t = now - t0;
+      const s = S0 + (1 - S0) * (1 - Math.pow(1 - Math.min(1, t / 500), 3));
+      const deg = A * Math.exp(-t / TAU) * Math.sin(W * t);
+      set(Math.max(0, c), s, deg);
+      if (!settled && t > 2700) { settled = true; set(CORD, 1, 0); lightOn(); return; }
+      raf = requestAnimationFrame(frame);
+    }
+    set(0, S0, 0);
+    raf = requestAnimationFrame(frame);
+  }
+  function leave() {
+    cancelAnimationFrame(raf); clearTimeout(litTimer);
+    lamp.classList.remove('is-hung', 'is-lit');
+    title && title.classList.remove('is-lit');
+    set(0, S0, 0);
+  }
+  set(0, S0, 0);
+  document.addEventListener('pearl:arrive', arrive);
+  document.addEventListener('pearl:leave', leave);
+})();
+
 /* 07 — 식순: 아이콘 사이를 S자로 잇는 길 + 스크롤에 맞춰 내려가는 진주알 */
 (function () {
   const track = document.getElementById('order-track');
@@ -384,7 +441,21 @@ function initGallery(photos) {
     line.setAttribute('d', d);
     len = nodes[nodes.length - 1];
     done.style.strokeDasharray = `${len} ${len}`;
-    y0 = pts[0].y; y1 = pts[pts.length - 1].y;
+    // [테스트] 마지막 '감사 추첨'에서 끝나지 않고, 오시는길 섹션 맨 위 가운데까지 이어짐
+    const loc = document.getElementById('location');
+    let last = pts[pts.length - 1];
+    if (loc && document.getElementById('loc-lamp')) {
+      const lr = loc.getBoundingClientRect();
+      const e = { x: lr.left - box.left + lr.width / 2, y: lr.top - box.top };
+      const k = (e.y - last.y) * 0.6;
+      d += ` C ${last.x} ${last.y + k}, ${e.x} ${e.y - k}, ${e.x} ${e.y}`;
+      last = e;
+    }
+    line.setAttribute('d', d);
+    done.setAttribute('d', d);
+    len = done.getTotalLength();
+    done.style.strokeDasharray = `${len} ${len}`;
+    y0 = pts[0].y; y1 = last.y;
     update();
   }
 
@@ -398,7 +469,15 @@ function initGallery(photos) {
     pearl.style.transform = `translate(${p.x}px, ${p.y}px)`;
     done.style.strokeDashoffset = len - at;
     items.forEach((li, i) => li.classList.toggle('is-on', at >= nodes[i] - 24));
+    // [테스트] 진주가 오시는길 섹션에 닿으면 조명으로 바뀜 (다시 위로 올라가면 진주로 돌아옴)
+    const arrived = t >= 0.999;
+    if (arrived !== pearlArrived) {
+      pearlArrived = arrived;
+      pearl.style.opacity = arrived ? 0 : '';
+      document.dispatchEvent(new Event(arrived ? 'pearl:arrive' : 'pearl:leave'));
+    }
   }
+  let pearlArrived = false;
 
   let ticking = false;
   window.addEventListener('scroll', () => {

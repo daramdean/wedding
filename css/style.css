@@ -1055,3 +1055,92 @@ body.is-curtain .bgm, body.is-viewer .bgm, body.is-rsvp .bgm { opacity: 0; point
 .totop.is-on { opacity: 1; transform: none; pointer-events: auto; }
 body.is-curtain .totop, body.is-viewer .totop, body.is-rsvp .totop { opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .totop { transition: opacity .2s; transform: none; } }
+
+/* =========================================================
+   [테스트] 08 LOCATION — 진주 펜던트 조명
+   ========================================================= */
+.loc.has-lamp { padding-top: 186px; }
+.lamp {
+  position: absolute; left: 50%; top: 0; z-index: 2;
+  width: 0; height: 0;
+  pointer-events: none;
+}
+.lamp__canopy {                       /* 천장 고정부 */
+  position: absolute; left: -15px; top: 0;
+  width: 30px; height: 6px; border-radius: 0 0 6px 6px;
+  background: linear-gradient(#5b6168, #3b4046);
+  opacity: 0; transition: opacity .3s ease;
+}
+.lamp__arm {
+  --cord: 0px; --s: .43;
+  position: absolute; left: 0; top: 4px;
+  transform-origin: 0 0;
+  opacity: 0;
+}
+.lamp.is-hung .lamp__canopy, .lamp.is-hung .lamp__arm { opacity: 1; }
+.lamp__cord {
+  position: absolute; left: -.75px; top: 0;
+  width: 1.5px; height: var(--cord);
+  background: #33383e;
+}
+.lamp__bulb {
+  position: absolute; left: -30px; top: var(--cord);
+  width: 60px; height: 60px;
+  transform: scale(var(--s)); transform-origin: 50% 0;
+}
+.lamp__bulb img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  border-radius: 50%;
+}
+.lamp__off { filter: drop-shadow(0 3px 4px rgba(20, 30, 50, .35)); }
+.lamp__on { opacity: 0; }
+.lamp__cap {                          /* 전구 위 금속 갓 */
+  position: absolute; left: 50%; top: -2px;
+  width: 22px; height: 6px; margin-left: -11px;
+  border-radius: 50% 50% 2px 2px / 100% 100% 2px 2px;
+  background: linear-gradient(#8b8f93, #5d6267);
+}
+.lamp__halo {                         /* 켜졌을 때 전구 주변 빛 번짐 */
+  position: absolute; left: 50%; top: 50%;
+  width: 190px; height: 190px; margin: -95px 0 0 -95px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 238, 212, .55) 0%, rgba(255, 232, 200, .22) 30%, rgba(255, 232, 200, 0) 65%);
+  opacity: 0;
+}
+.lamp__beam {                         /* 전구에서 타이틀로 내려가는 은은한 빛 */
+  position: absolute; left: -110px; top: 116px;
+  width: 220px; height: 120px;
+  background: radial-gradient(ellipse 50% 100% at 50% 0, rgba(255, 236, 208, .20), rgba(255, 236, 208, .07) 55%, rgba(255, 236, 208, 0) 80%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%);
+          mask-image: linear-gradient(to bottom, transparent, #000 40%);
+  opacity: 0;
+}
+.lamp__pool {                         /* 타이틀 뒤 바닥에 맺힌 빛 */
+  position: absolute; left: 50%;
+  width: 280px; height: 110px; margin-left: -140px; top: -6px;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255, 234, 204, .28), rgba(255, 234, 204, .10) 50%, rgba(255, 234, 204, 0) 100%);
+  opacity: 0; transition: opacity 1.6s ease .2s;
+  pointer-events: none;
+}
+.lamp.is-lit .lamp__on    { animation: lampOn .9s ease-out forwards; }
+.lamp.is-lit .lamp__halo  { animation: lampOn .9s ease-out forwards; }
+.lamp.is-lit .lamp__beam  { animation: lampBeam 1.6s ease-out .15s forwards; }
+@keyframes lampOn {                   /* 딸깍 — 살짝 깜빡이며 켜짐 */
+  0% { opacity: 0; } 18% { opacity: .75; } 30% { opacity: .25; } 55% { opacity: .9; } 100% { opacity: 1; }
+}
+@keyframes lampBeam { from { opacity: 0; } to { opacity: 1; } }
+/* 타이틀: 위에서 내려온 빛을 받아 윗부분이 따뜻하게 밝아짐 */
+.loc .sec-head { position: relative; }
+.loc__title { position: relative; transition: text-shadow 1.6s ease .2s; }
+.loc__title::after {
+  content: attr(data-text);
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, #FFF4E2 15%, #F6E3C4 55%, rgba(246, 227, 196, 0) 95%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+  opacity: 0; transition: opacity 1.6s ease .2s;
+  pointer-events: none;
+}
+.loc__title.is-lit { text-shadow: 0 0 14px rgba(255, 234, 204, .55); }
+.loc__title.is-lit::after { opacity: 1; }
+.sec-head:has(.loc__title.is-lit) .lamp__pool { opacity: 1; }

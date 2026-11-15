@@ -24,7 +24,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Nanum+Myeongjo:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/curtain-closed-l.webp">
 <link rel="preload" as="image" href="assets/img/curtain-closed-r.webp">
-<link rel="stylesheet" href="css/style.css?v=1115h">
+<link rel="stylesheet" href="css/style.css?v=lamp1">
 <script>
 document.documentElement.classList.add('js');
 /* 인트로 높이 고정 — 스크롤 중 주소창이 줄고 늘어도 이미지가 확대/축소되지 않게, 가로폭이 바뀔 때만 다시 계산 */
@@ -222,9 +222,24 @@ document.documentElement.classList.add('js');
 
 
   <!-- 08 LOCATION — 교통 및 주차 / 지도 -->
-  <section class="section loc" id="location" aria-labelledby="loc-title">
+  <section class="section loc has-lamp" id="location" aria-labelledby="loc-title">
+    <!-- [테스트] 진주 조명 — 식순의 진주가 내려와 펜던트 조명이 되고, 멈추면 켜짐 -->
+    <div class="lamp" id="loc-lamp" aria-hidden="true">
+      <span class="lamp__canopy"></span>
+      <div class="lamp__arm" id="lamp-arm">
+        <span class="lamp__cord"></span>
+        <span class="lamp__bulb">
+          <span class="lamp__halo"></span>
+          <img class="lamp__off" src="assets/img/pearl.webp" alt="">
+          <img class="lamp__on" src="assets/img/lamp-lit.webp" alt="">
+          <span class="lamp__cap"></span>
+        </span>
+      </div>
+      <span class="lamp__beam"></span>
+    </div>
     <header class="sec-head reveal">
-      <h2 class="t-title" id="loc-title">Location</h2>
+      <span class="lamp__pool" aria-hidden="true"></span>
+      <h2 class="t-title loc__title" id="loc-title" data-text="Location">Location</h2>
       <p class="t-sub">오시는 길</p>
     </header>
 
@@ -396,6 +411,6 @@ document.documentElement.classList.add('js');
   </div>
 </div>
 
-<script src="js/main.js?v=1115e"></script>
+<script src="js/main.js?v=lamp1"></script>
 </body>
 </html>
