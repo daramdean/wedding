@@ -1010,3 +1010,25 @@ body.is-rsvp { overflow: hidden; }
 }
 @keyframes bars { from { height: 3px; } to { height: 14px; } }
 body.is-curtain .bgm, body.is-viewer .bgm, body.is-rsvp .bgm { opacity: 0; pointer-events: none; }
+
+/* =========================================================
+   맨 위로 — 위로 스크롤할 때만 나타남
+   ========================================================= */
+.totop {
+  position: fixed; z-index: 120;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+  right: max(14px, calc((100vw - var(--page-w)) / 2 + 14px));
+  width: 42px; height: 42px; padding: 0; border-radius: 50%;
+  border: 1px solid rgba(74, 99, 133, .35);
+  background: rgba(255, 255, 255, .85);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  box-shadow: 0 4px 14px rgba(59, 69, 82, .12);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  opacity: 0; transform: translateY(12px); pointer-events: none;
+  transition: opacity .3s var(--ease), transform .3s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.totop svg { width: 20px; height: 20px; fill: none; stroke: var(--deep); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.totop.is-on { opacity: 1; transform: none; pointer-events: auto; }
+body.is-curtain .totop, body.is-viewer .totop, body.is-rsvp .totop { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .totop { transition: opacity .2s; transform: none; } }
