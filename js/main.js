@@ -429,13 +429,17 @@ document.addEventListener('click', async e => {
 
 /* 08 — 오시는 길: 탭 + 카카오맵 */
 (function () {
-  // ▼ 배포 전에 카카오 개발자 콘솔에서 받은 JavaScript 키를 넣어 주세요 (사이트 도메인 등록 필요)
-  const KAKAO_JS_KEY = '';
+  // 카카오 개발자 콘솔의 JavaScript 키 (JavaScript SDK 도메인에 https://daramdean.github.io 등록됨)
+  const KAKAO_JS_KEY = 'f952c8508af578b25d755191be7d0c80';
+  const KAKAO_TIMEOUT = 7000;                       // 이 시간 안에 카카오 지도 타일이 안 그려지면 구글 지도로 대체
   const VENUE = { name: '콘래드 서울', lat: 37.5254, lng: 126.9266 };
 
   const tabs = [...document.querySelectorAll('.loc [role="tab"]')];
   if (!tabs.length) return;
   let map = null;
+  let kakaoOk = false;      // 카카오 지도 타일이 실제로 그려졌는지
+  let embedded = false;     // 구글 지도로 대체했는지
+  let timer = 0;
 
   function select(tab) {
     tabs.forEach(t => {
@@ -453,24 +457,48 @@ document.addEventListener('click', async e => {
     }
   }));
 
-  function fallback(msg) {
-    const f = document.getElementById('map-fallback'); if (f) f.innerHTML = msg;
-  }
   function showMap() {
     if (map) { map.relayout(); map.setCenter(new kakao.maps.LatLng(VENUE.lat, VENUE.lng)); return; }
-    if (!KAKAO_JS_KEY) { fallback('지도는 청첩장을 배포한 뒤에 표시돼요.<br>아래 버튼으로 카카오맵에서 바로 볼 수 있어요.'); return; }
-    if (window.kakao && kakao.maps) return draw();
+    if (embedded) return;
+    if (!KAKAO_JS_KEY) return embed();              // 키가 없으면 키 없이 쓰는 구글 지도 임베드
+    if (!timer) timer = setTimeout(() => { if (!kakaoOk) giveUpKakao(); }, KAKAO_TIMEOUT);
+    if (window.kakao && kakao.maps && kakao.maps.Map) return draw();
+    if (document.getElementById('kakao-sdk')) return;
     const s = document.createElement('script');
+    s.id = 'kakao-sdk';
     s.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_JS_KEY}&autoload=false`;
-    s.onload = () => kakao.maps.load(draw);
-    s.onerror = () => fallback('지도를 불러오지 못했어요.<br>아래 버튼으로 카카오맵에서 확인해 주세요.');
+    s.onload = () => (window.kakao && kakao.maps ? kakao.maps.load(draw) : giveUpKakao());
+    s.onerror = giveUpKakao;                         // 키/도메인 오류 등으로 SDK를 못 불러오면 대체
     document.head.appendChild(s);
   }
+  // 키·도메인·카카오맵 사용 설정 문제 등으로 지도가 안 그려지면 구글 지도로 바꿔 보여 준다
+  function giveUpKakao() {
+    if (kakaoOk || embedded) return;
+    clearTimeout(timer);
+    map = null;
+    document.getElementById('kakao-map').innerHTML = '';
+    embed();
+  }
+  function embed() {
+    if (map || embedded) return;
+    embedded = true;
+    const el = document.getElementById('kakao-map');
+    const f = document.createElement('iframe');
+    f.src = `https://maps.google.com/maps?q=${encodeURIComponent(VENUE.name)}%40${VENUE.lat},${VENUE.lng}&z=16&hl=ko&output=embed`;
+    f.title = `${VENUE.name} 위치 지도`;
+    f.loading = 'lazy';
+    f.referrerPolicy = 'no-referrer-when-downgrade';
+    f.className = 'map__frame';
+    f.onload = () => { const fb = document.getElementById('map-fallback'); if (fb) fb.remove(); };
+    el.appendChild(f);
+  }
   function draw() {
+    if (embedded || map) return;
     const el = document.getElementById('kakao-map');
     const pos = new kakao.maps.LatLng(VENUE.lat, VENUE.lng);
     el.innerHTML = '';
     map = new kakao.maps.Map(el, { center: pos, level: 3 });
+    kakao.maps.event.addListener(map, 'tilesloaded', () => { kakaoOk = true; clearTimeout(timer); });
     new kakao.maps.Marker({ map, position: pos });
     map.setZoomable(false);                       // 페이지 스크롤 중 지도 확대 방지
     map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
