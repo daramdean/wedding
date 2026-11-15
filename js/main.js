@@ -731,7 +731,8 @@ document.addEventListener('click', async e => {
     const cw = car.offsetWidth, ch = car.offsetHeight;
     const r = document.createRange(); r.selectNodeContents(title);
     const tw = r.getBoundingClientRect().width;
-    const tTop = title.offsetTop, tH = title.offsetHeight;
+    const head = title.offsetParent === sec ? null : title.offsetParent;
+    const tTop = title.offsetTop + (head ? head.offsetTop : 0), tH = title.offsetHeight;
     const tL = (W - tw) / 2, tR = tL + tw;
     // 최종 위치(차 중심): 타이틀 오른쪽 위
     const ex = Math.min(W - cw / 2 - 6, tR + cw / 2 - 4);
