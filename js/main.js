@@ -358,7 +358,7 @@ function initGallery(photos) {
   const title = document.getElementById('loc-title');
   if (!lamp || !arm) return;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const CORD = 78, BULB = 60, S0 = 26 / BULB;     // 줄 길이, 조명 크기, 시작 크기(진주 크기)
+  const CORD = 74, BULB = 46, S0 = 26 / BULB;     // 줄 길이, 조명 크기, 시작 크기(진주 크기)
   let raf = 0, litTimer = 0;
 
   function set(c, s, deg) {
@@ -375,7 +375,7 @@ function initGallery(photos) {
     // 줄 길이: 중력으로 떨어지다 끝에서 스프링처럼 한 번 튕김
     let c = 0, v = 0.18, last = null, t0 = null, settled = false;
     const G = 0.0011, K = 0.0011, D = 0.018;
-    const A = 9, W = 2 * Math.PI / 1250, TAU = 850; // 흔들림: 처음 9도, 주기 1.25초, 서서히 잦아듦
+    const A = 8, W = 2 * Math.PI / 950, TAU = 420;  // 흔들림: 처음 8도, 주기 0.95초, 빠르게 잦아듦
     function frame(now) {
       if (t0 === null) { t0 = last = now; }
       let dt = Math.min(32, now - last); last = now;
@@ -386,10 +386,10 @@ function initGallery(photos) {
         if (c > CORD && Math.abs(v) < 0.002 && Math.abs(c - CORD) < 0.3) { c = CORD; v = 0; }
       }
       const t = now - t0;
-      const s = S0 + (1 - S0) * (1 - Math.pow(1 - Math.min(1, t / 500), 3));
+      const s = S0 + (1 - S0) * (1 - Math.pow(1 - Math.min(1, t / 380), 3));
       const deg = A * Math.exp(-t / TAU) * Math.sin(W * t);
       set(Math.max(0, c), s, deg);
-      if (!settled && t > 2700) { settled = true; set(CORD, 1, 0); lightOn(); return; }
+      if (!settled && t > 1450) { settled = true; set(CORD, 1, 0); lightOn(); return; }
       raf = requestAnimationFrame(frame);
     }
     set(0, S0, 0);

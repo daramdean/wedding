@@ -1059,7 +1059,7 @@ body.is-curtain .totop, body.is-viewer .totop, body.is-rsvp .totop { opacity: 0;
 /* =========================================================
    [테스트] 08 LOCATION — 진주 펜던트 조명
    ========================================================= */
-.loc.has-lamp { padding-top: 186px; }
+.loc.has-lamp { padding-top: 168px; }
 .lamp {
   position: absolute; left: 50%; top: 0; z-index: 2;
   width: 0; height: 0;
@@ -1084,8 +1084,8 @@ body.is-curtain .totop, body.is-viewer .totop, body.is-rsvp .totop { opacity: 0;
   background: #33383e;
 }
 .lamp__bulb {
-  position: absolute; left: -30px; top: var(--cord);
-  width: 60px; height: 60px;
+  position: absolute; left: -23px; top: var(--cord);
+  width: 46px; height: 46px;
   transform: scale(var(--s)); transform-origin: 50% 0;
 }
 .lamp__bulb img {
@@ -1096,28 +1096,28 @@ body.is-curtain .totop, body.is-viewer .totop, body.is-rsvp .totop { opacity: 0;
 .lamp__on { opacity: 0; }
 .lamp__cap {                          /* 전구 위 금속 갓 */
   position: absolute; left: 50%; top: -2px;
-  width: 22px; height: 6px; margin-left: -11px;
+  width: 17px; height: 5px; margin-left: -8.5px;
   border-radius: 50% 50% 2px 2px / 100% 100% 2px 2px;
   background: linear-gradient(#8b8f93, #5d6267);
 }
 .lamp__halo {                         /* 켜졌을 때 전구 주변 빛 번짐 */
   position: absolute; left: 50%; top: 50%;
-  width: 190px; height: 190px; margin: -95px 0 0 -95px;
+  width: 96px; height: 96px; margin: -48px 0 0 -48px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 238, 212, .55) 0%, rgba(255, 232, 200, .22) 30%, rgba(255, 232, 200, 0) 65%);
+  background: radial-gradient(circle, rgba(255, 238, 212, .45) 0%, rgba(255, 232, 200, .16) 38%, rgba(255, 232, 200, 0) 70%);
   opacity: 0;
 }
 .lamp__beam {                         /* 전구에서 타이틀로 내려가는 은은한 빛 */
-  position: absolute; left: -110px; top: 116px;
-  width: 220px; height: 120px;
-  background: radial-gradient(ellipse 50% 100% at 50% 0, rgba(255, 236, 208, .20), rgba(255, 236, 208, .07) 55%, rgba(255, 236, 208, 0) 80%);
+  position: absolute; left: -45px; top: 104px;
+  width: 90px; height: 60px;
+  background: radial-gradient(ellipse 50% 100% at 50% 0, rgba(255, 236, 208, .12), rgba(255, 236, 208, .04) 55%, rgba(255, 236, 208, 0) 80%);
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%);
           mask-image: linear-gradient(to bottom, transparent, #000 40%);
   opacity: 0;
 }
 .lamp__pool {                         /* 타이틀 뒤 바닥에 맺힌 빛 */
   position: absolute; left: 50%;
-  width: 280px; height: 110px; margin-left: -140px; top: -6px;
+  width: 150px; height: 44px; margin-left: -75px; top: -10px;
   background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255, 234, 204, .28), rgba(255, 234, 204, .10) 50%, rgba(255, 234, 204, 0) 100%);
   opacity: 0; transition: opacity 1.6s ease .2s;
   pointer-events: none;
@@ -1135,12 +1135,12 @@ body.is-curtain .totop, body.is-viewer .totop, body.is-rsvp .totop { opacity: 0;
 .loc__title::after {
   content: attr(data-text);
   position: absolute; inset: 0;
-  background: linear-gradient(to bottom, #FFF4E2 15%, #F6E3C4 55%, rgba(246, 227, 196, 0) 95%);
+  background: radial-gradient(ellipse 34% 60% at 50% 0, #FFE2B4 0%, rgba(255, 226, 180, .6) 45%, rgba(255, 226, 180, 0) 100%);
   -webkit-background-clip: text; background-clip: text;
   color: transparent;
   opacity: 0; transition: opacity 1.6s ease .2s;
   pointer-events: none;
 }
-.loc__title.is-lit { text-shadow: 0 0 14px rgba(255, 234, 204, .55); }
+.loc__title.is-lit { text-shadow: 0 -1px 4px rgba(255, 234, 204, .22); }
 .loc__title.is-lit::after { opacity: 1; }
-.sec-head:has(.loc__title.is-lit) .lamp__pool { opacity: 1; }
+.sec-head:has(.loc__title.is-lit) .lamp__pool { opacity: .6; }
