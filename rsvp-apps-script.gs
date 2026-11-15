@@ -14,7 +14,9 @@
  *
  * ※ 이 스크립트를 수정했다면 [배포] → [배포 관리] → 연필 → 버전 "새 버전" 으로
  *   다시 배포해야 반영됩니다. (URL은 그대로 유지됨)
- * ※ 브라우저에서 웹 앱 URL을 열어 {"ok":true,"ready":true} 가 보이면 정상입니다.
+ * ※ 브라우저에서 웹 앱 URL을 열어 {"ok":true,"ready":true,"sheet":…} 가 보이면 정상입니다.
+ *   (sheet 가 응답이 쌓이는 스프레드시트 주소)
+ * ※ 이 파일 내용을 붙여넣을 때 파일 이름 등 다른 글자가 맨 위에 섞이지 않게 주의하세요.
  *
  * ── 시트 구성 ─────────────────────────────────────────────
  * "참석여부" 시트에 [성함 | 구분 | 참석여부 | 처음 보낸 시각 | 마지막 수정 시각]
@@ -27,7 +29,8 @@ var SIDES = ['신랑측', '신부측'];
 var ATTENDS = ['참석', '미참석'];
 
 function doGet() {
-  return json_({ ok: true, ready: true });
+  var ss = getSpreadsheet_();
+  return json_({ ok: true, ready: true, sheet: ss.getUrl() });
 }
 
 function doPost(e) {
@@ -70,8 +73,20 @@ function doPost(e) {
   }
 }
 
-function getSheet_() {
+// 스프레드시트에서 연 프로젝트면 그 시트를, 별도 프로젝트면 "결혼식 참석여부" 시트를 새로 만들어 사용
+function getSpreadsheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
+  if (ss) return ss;
+  var props = PropertiesService.getScriptProperties();
+  var id = props.getProperty('SHEET_ID');
+  if (id) return SpreadsheetApp.openById(id);
+  ss = SpreadsheetApp.create('결혼식 참석여부');
+  props.setProperty('SHEET_ID', ss.getId());
+  return ss;
+}
+
+function getSheet_() {
+  var ss = getSpreadsheet_();
   var sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(HEADERS);
