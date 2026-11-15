@@ -635,6 +635,30 @@ document.addEventListener('click', async e => {
   wrap.addEventListener('click', e => { if (e.target.closest('[data-rsvp-close]')) close(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !wrap.hidden) close(); });
 
+  // 모바일 터치 — 뒤 페이지 스크롤 차단 + 스와이프하면 키보드 내리기
+  // (iOS 사파리는 body overflow:hidden 을 무시하므로 터치 이동을 직접 막음)
+  const box = form;
+  let ty = 0, decided = false;
+  wrap.addEventListener('touchstart', e => {
+    ty = e.touches[0].clientY; decided = false;
+  }, { passive: true });
+  wrap.addEventListener('touchmove', e => {
+    if (e.touches.length > 1) return;
+    const y = e.touches[0].clientY, dy = y - ty;
+    // 손가락을 위아래로 조금이라도 밀면 입력창 포커스를 풀어 키보드를 내림
+    const a = document.activeElement;
+    if (Math.abs(dy) > 6 && a && a !== document.body && box.contains(a) && a.matches('input, textarea')) a.blur();
+    if (decided) return;   // 한 번 스크롤이 시작된 제스처는 그대로 둠
+    if (Math.abs(dy) < 2) return;
+    decided = true;
+    const inBox = box.contains(e.target);
+    const max = box.scrollHeight - box.clientHeight;
+    const blocked = !inBox || max <= 1 ||
+      (dy > 0 && box.scrollTop <= 0) ||          // 맨 위에서 아래로 당김
+      (dy < 0 && box.scrollTop >= max - 1);      // 맨 아래에서 위로 밂
+    if (blocked && e.cancelable) e.preventDefault();
+  }, { passive: false });
+
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const name = f.name.value.replace(/\s+/g, ' ').trim();

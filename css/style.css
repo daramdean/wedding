@@ -962,20 +962,22 @@ body.is-viewer { overflow: hidden; }
   box-shadow: 0 4px 14px rgba(59, 69, 82, .12);
 }
 
-.rsvp { position: fixed; inset: 0; z-index: 250; display: flex; align-items: flex-end; justify-content: center; }
+.rsvp { position: fixed; inset: 0; z-index: 250; display: flex; align-items: flex-end; justify-content: center; overscroll-behavior: none; }
 .rsvp[hidden] { display: none; }
-.rsvp__dim { position: absolute; inset: 0; background: rgba(20, 24, 31, .5); opacity: 0; transition: opacity .3s; }
+.rsvp__dim { position: absolute; inset: 0; background: rgba(20, 24, 31, .5); opacity: 0; transition: opacity .3s; touch-action: none; }
 .rsvp__box {
   position: relative; width: 100%; max-width: 430px;
-  max-height: 92vh; overflow-y: auto;
+  max-height: 92vh; max-height: 92dvh;   /* 주소창·키보드로 창 높이가 바뀌어도 덜 출렁이게 */
+  overflow-y: auto; overscroll-behavior: contain;   /* 모달 끝까지 스크롤해도 뒤 페이지로 넘어가지 않게 */
   padding: 34px 24px calc(env(safe-area-inset-bottom, 0px) + 24px);
   background: var(--ivory);
   border-radius: 18px 18px 0 0;
   text-align: left;
-  transform: translateY(100%); transition: transform .4s var(--ease);
+  transform: translate3d(0, 100%, 0); transition: transform .4s var(--ease);
+  will-change: transform; backface-visibility: hidden;   /* 열린 뒤에도 별도 레이어로 유지 → 스크롤 버벅임 방지 */
 }
 .rsvp.is-open .rsvp__dim { opacity: 1; }
-.rsvp.is-open .rsvp__box { transform: none; }
+.rsvp.is-open .rsvp__box { transform: translate3d(0, 0, 0); }
 .rsvp__x { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border: 0; background: none; cursor: pointer; }
 .rsvp__x svg { width: 22px; height: 22px; fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; }
 .rsvp__script { font-family: var(--f-en); font-size: 12px; letter-spacing: .3em; color: var(--dusty); text-align: center; }
