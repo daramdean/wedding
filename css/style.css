@@ -558,7 +558,7 @@ body.is-curtain { overflow: hidden; }
 }
 .person--bride .person__name { left: 6%;  transform: rotate(-6deg); }
 .person--groom { z-index: 3; }
-.person--groom .person__name { right: 74%; top: 52px; transform: rotate(-5deg); }   /* 머리 왼쪽 빈 공간 */
+.person--groom .person__name { right: 74%; top: 64px; transform: rotate(-5deg); }   /* 머리 왼쪽 빈 공간 */
 .doodle { width: 14px; height: 13px; vertical-align: top; margin-left: 2px; fill: none; stroke: var(--dusty); stroke-width: 1.8; }
 
 /* 소개 텍스트 스티커 — 특징 하나 = 스티커 하나 */
