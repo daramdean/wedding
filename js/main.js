@@ -240,7 +240,7 @@ const Curtain = (function () {
 /* 06 — 갤러리: 3×3 그리드 + 전체화면 뷰어 (스와이프·버튼, 확대 금지) */
 window.GALLERY_READY = fetch('assets/gallery/gallery.json', { cache: 'no-cache' })
   .then(r => r.json()).then(d => d.photos)
-  .catch(() => Array.from({ length: 58 }, (_, i) => { const n = String(i + 1).padStart(2, '0'); return { full: `assets/gallery/g${n}.webp`, thumb: `assets/gallery/g${n}-t.webp` }; }))
+  .catch(() => Array.from({ length: 36 }, (_, i) => { const n = String(i + 1).padStart(2, '0'); return { full: `assets/gallery/g${n}.webp`, thumb: `assets/gallery/g${n}-t.webp` }; }))
   .then(photos => initGallery(photos));
 function initGallery(photos) {
   const COUNT = photos.length;
