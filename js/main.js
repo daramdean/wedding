@@ -677,3 +677,38 @@ document.addEventListener('click', async e => {
     if (document.hidden) audio.pause(); else audio.play().catch(() => {});
   });
 })();
+
+/* 맨 위로 — 위로 스크롤할 때만 나타나고, 아래로 내리거나 맨 위 근처면 숨김 */
+(function () {
+  const btn = document.getElementById('totop'); if (!btn) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const MIN_Y = () => window.innerHeight;   // 한 화면 이상 내려왔을 때만
+  const DELTA = 8;                          // 손떨림 정도의 작은 움직임은 무시
+  const IDLE = 2500;                        // 멈추고 잠시 뒤 자동으로 숨김
+  let lastY = window.scrollY, ticking = false, idle = 0, jumping = false;
+
+  function show(on) {
+    btn.classList.toggle('is-on', on);
+    btn.tabIndex = on ? 0 : -1;
+    clearTimeout(idle);
+    if (on) idle = setTimeout(() => show(false), IDLE);
+  }
+  function update() {
+    const y = window.scrollY, d = y - lastY;
+    if (y < MIN_Y()) { show(false); jumping = false; }
+    else if (jumping) { /* 맨 위로 이동 중에는 다시 나타나지 않게 */ }
+    else if (d < -DELTA) show(true);
+    else if (d > DELTA) show(false);
+    if (Math.abs(d) > DELTA || y < MIN_Y()) lastY = y;
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(update);
+  }, { passive: true });
+
+  btn.addEventListener('click', () => {
+    show(false); jumping = true;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  });
+})();
