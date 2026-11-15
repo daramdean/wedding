@@ -1055,3 +1055,56 @@ body.is-curtain .bgm, body.is-viewer .bgm, body.is-rsvp .bgm { opacity: 0; point
 .totop.is-on { opacity: 1; transform: none; pointer-events: auto; }
 body.is-curtain .totop, body.is-viewer .totop, body.is-rsvp .totop { opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .totop { transition: opacity .2s; transform: none; } }
+
+/* =========================================================
+   [테스트] 08 LOCATION — 헤드라이트 자동차
+   우상단 모서리에서 S자로 내려와 타이틀을 비추고, 타이틀에 반사광
+   ========================================================= */
+.loc-drive {
+  position: absolute; inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.loc .sec-head { position: relative; z-index: 1; }
+.loc-car {
+  --car-w: 108px;
+  position: absolute; left: 0; top: 0;
+  width: var(--car-w);
+  aspect-ratio: 600 / 307;
+  transform-origin: 50% 50%;
+  opacity: 0;
+  will-change: transform;
+}
+.loc-car.is-on { opacity: 1; }
+.loc-car__img { position: relative; display: block; width: 100%; height: auto; filter: drop-shadow(0 6px 8px rgba(10, 20, 40, .35)); }
+/* 헤드라이트 빛줄기: 전조등 위치에서 왼쪽으로 퍼지는 원뿔 */
+.loc-car__beam {
+  position: absolute;
+  width: var(--beam-len, 190px); height: 96px;
+  margin-top: -48px;
+  transform-origin: 100% 50%;
+  transform: translateX(-100%) rotate(var(--beam-rot, -14deg));
+  background: linear-gradient(to left, rgba(255, 226, 160, .75), rgba(255, 214, 140, .28) 45%, rgba(255, 214, 140, 0));
+  clip-path: polygon(100% 46%, 100% 54%, 0 100%, 0 0);
+  filter: blur(5px);
+  mix-blend-mode: screen;
+  opacity: var(--beam-a, .35);
+}
+.loc-car__beam--l { left: 5%;  top: 45%; }
+.loc-car__beam--r { left: 42%; top: 52%; }
+/* 타이틀 반사광: 같은 글자를 겹쳐 따뜻한 빛을 입힘 */
+.loc__title { position: relative; }
+.loc__title::after {
+  content: attr(data-text);
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 46% 120% at var(--glow-x, 70%) 55%,
+              #FFF6DC 0%, #FFE2A6 32%, rgba(255, 226, 166, .35) 60%, rgba(255, 226, 166, 0) 78%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 6px rgba(255, 214, 140, .55));
+  opacity: 0;
+  transition: opacity 1.2s var(--ease);
+  pointer-events: none;
+}
+.loc__title.is-lit::after { opacity: 1; }

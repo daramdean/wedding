@@ -24,7 +24,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Nanum+Myeongjo:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/curtain-closed-l.webp">
 <link rel="preload" as="image" href="assets/img/curtain-closed-r.webp">
-<link rel="stylesheet" href="css/style.css?v=1115h">
+<link rel="stylesheet" href="css/style.css?v=car1">
 <script>
 document.documentElement.classList.add('js');
 /* 인트로 높이 고정 — 스크롤 중 주소창이 줄고 늘어도 이미지가 확대/축소되지 않게, 가로폭이 바뀔 때만 다시 계산 */
@@ -223,8 +223,16 @@ document.documentElement.classList.add('js');
 
   <!-- 08 LOCATION — 교통 및 주차 / 지도 -->
   <section class="section loc" id="location" aria-labelledby="loc-title">
+    <!-- [테스트] 헤드라이트 자동차 — 섹션 진입 시 우상단에서 S자로 내려와 타이틀을 비춤 -->
+    <div class="loc-drive" id="loc-drive" aria-hidden="true">
+      <div class="loc-car" id="loc-car">
+        <span class="loc-car__beam loc-car__beam--l"></span>
+        <span class="loc-car__beam loc-car__beam--r"></span>
+        <img class="loc-car__img" src="assets/img/car.webp" alt="" width="600" height="307" decoding="async">
+      </div>
+    </div>
     <header class="sec-head reveal">
-      <h2 class="t-title" id="loc-title">Location</h2>
+      <h2 class="t-title loc__title" id="loc-title" data-text="Location">Location</h2>
       <p class="t-sub">오시는 길</p>
     </header>
 
@@ -396,6 +404,6 @@ document.documentElement.classList.add('js');
   </div>
 </div>
 
-<script src="js/main.js?v=1115e"></script>
+<script src="js/main.js?v=car1"></script>
 </body>
 </html>

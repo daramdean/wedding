@@ -712,3 +712,88 @@ document.addEventListener('click', async e => {
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
   });
 })();
+
+/* [테스트] 08 LOCATION — 헤드라이트 자동차
+   섹션에 들어오면 우상단 모서리에서 작게 나타나 S자로 내려오며 점점 커지고(원근감),
+   타이틀 옆에 멈춰 헤드라이트로 타이틀을 비춘다. 한 번만 재생. */
+(function () {
+  const sec = document.getElementById('location');
+  const car = document.getElementById('loc-car');
+  const title = document.getElementById('loc-title');
+  if (!sec || !car || !title) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const beams = car.querySelectorAll('.loc-car__beam');
+  const DUR = 3400;
+  const HL = [[0.05, 0.45], [0.42, 0.52]];   // 전조등 위치 (차 이미지 비율)
+
+  function layout() {
+    const W = sec.clientWidth;
+    const cw = car.offsetWidth, ch = car.offsetHeight;
+    const r = document.createRange(); r.selectNodeContents(title);
+    const tw = r.getBoundingClientRect().width;
+    const tTop = title.offsetTop, tH = title.offsetHeight;
+    const tL = (W - tw) / 2, tR = tL + tw;
+    // 최종 위치(차 중심): 타이틀 오른쪽 위
+    const ex = Math.min(W - cw / 2 - 6, tR + cw / 2 - 4);
+    const ey = tTop - ch * 0.15;
+    // 빛줄기가 타이틀 중심~오른쪽을 향하도록 각도·길이 계산
+    const target = [tL + tw * 0.62, tTop + tH * 0.6];
+    beams.forEach((b, i) => {
+      const hx = ex - cw / 2 + cw * HL[i][0], hy = ey - ch / 2 + ch * HL[i][1];
+      const dx = target[0] - hx, dy = target[1] - hy;
+      const ang = Math.atan2(dy, -dx) * 180 / Math.PI;   // 왼쪽 기준, 아래쪽이 양수
+      b.style.setProperty('--beam-rot', (-ang).toFixed(1) + 'deg');
+      b.style.setProperty('--beam-len', Math.round(Math.hypot(dx, dy) + 60) + 'px');
+    });
+    title.style.setProperty('--glow-x', Math.round(((ex - cw / 2) - tL) / tw * 100 - 18) + '%');
+    return { W, ex, ey };
+  }
+
+  // S자 경로 (3차 베지어): 우상단 바깥 → 왼쪽으로 크게 → 오른쪽으로 → 타이틀 옆
+  function bez(p, t) {
+    const u = 1 - t;
+    return u * u * u * p[0] + 3 * u * u * t * p[1] + 3 * u * t * t * p[2] + t * t * t * p[3];
+  }
+  const ease = t => 1 - Math.pow(1 - t, 2.4);   // 도착할 때 천천히 (브레이크)
+
+  function place(x, y, s, rot) {
+    car.style.transform = `translate(${x - car.offsetWidth / 2}px, ${y - car.offsetHeight / 2}px) rotate(${rot}deg) scale(${s})`;
+  }
+
+  function finish(L) {
+    place(L.ex, L.ey, 1, 0);
+    car.style.setProperty('--beam-a', 1);
+    beams.forEach(b => b.style.setProperty('--beam-a', 1));
+    title.classList.add('is-lit');
+  }
+
+  function run() {
+    const L = layout();
+    car.classList.add('is-on');
+    if (reduce) { finish(L); return; }
+    const W = L.W;
+    const PX = [W + 20, W * 0.30, W * 1.05, L.ex];
+    const PY = [-40, L.ey * 0.25, L.ey * 0.55, L.ey];
+    let t0 = null, px = PX[0], py = PY[0];
+    function frame(now) {
+      if (t0 === null) t0 = now;
+      const k = Math.min(1, (now - t0) / DUR), t = ease(k);
+      const x = bez(PX, t), y = bez(PY, t);
+      const s = 0.18 + 0.82 * Math.pow(t, 1.6);          // 멀리서 가까이
+      const vx = x - px, vy = y - py; px = x; py = y;
+      const rot = k < 1 ? Math.max(-9, Math.min(9, vx / (Math.hypot(vx, vy) || 1) * 9)) : 0;
+      place(x, y, s, rot * (1 - t));
+      const a = 0.25 + 0.75 * Math.pow(t, 3);           // 가까워질수록 빛줄기 밝게
+      beams.forEach(b => b.style.setProperty('--beam-a', a.toFixed(3)));
+      if (k > 0.82) title.classList.add('is-lit');
+      if (k < 1) requestAnimationFrame(frame); else finish(L);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  if (!('IntersectionObserver' in window)) { run(); return; }
+  const io = new IntersectionObserver(es => {
+    if (es.some(e => e.isIntersecting)) { io.disconnect(); setTimeout(run, 250); }
+  }, { rootMargin: '0px 0px -35% 0px' });
+  io.observe(title);
+})();
